@@ -1,10 +1,10 @@
 package net.tfobz.vokabeltrainer.model;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class VokabeltrainerGUI extends JFrame {
 
@@ -70,7 +71,28 @@ public class VokabeltrainerGUI extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser importData = new JFileChooser();
+				JFileChooser importFileChooser = new JFileChooser();
+
+				importFileChooser.setMultiSelectionEnabled(false);
+				importFileChooser.setFileFilter(new FileNameExtensionFilter("Textdateien", "txt"));
+				importFileChooser.setAcceptAllFileFilterUsed(false);
+				
+				if(importFileChooser.showOpenDialog(VokabeltrainerGUI.this) == JFileChooser.APPROVE_OPTION){
+					String path = importFileChooser.getSelectedFile().getAbsolutePath();
+					
+					if(path.endsWith(".txt")){
+						File file = new File(path);
+						
+						if(!file.isDirectory() && file.isFile()){
+							
+						}
+						else{
+							JOptionPane.showMessageDialog(VokabeltrainerGUI.this, "Die Datei \"" + path + "\" existiert nicht.", "Achtung", JOptionPane.WARNING_MESSAGE);
+						}
+					}else{
+						JOptionPane.showMessageDialog(VokabeltrainerGUI.this, "Die Datei \"" + path + "\" ist keine Textdatei (*.txt)", "Achtung", JOptionPane.WARNING_MESSAGE);
+					}
+				}
 			}
 		});
 		contentPane.add(importieren);
