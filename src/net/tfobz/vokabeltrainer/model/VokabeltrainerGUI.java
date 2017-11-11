@@ -2,28 +2,36 @@ package net.tfobz.vokabeltrainer.model;
 
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
 
 public class VokabeltrainerGUI extends JFrame {
 
-	private JPanel contentPane;
-	JList<String> faecherListe;
+	private JPanel contentPane = null;
+	private JTable faecherListe= null;
 	private int num = 1;
 	private JLabel pos = null;
+	private JLabel vokabeltitel = null;
+	private String[] columnNames = {"Beschreibung", "Zuletzt gelernt", "Fällig"};
+	private JScrollPane scrollPane= null;
 
 	/**
 	 * Launch the application.
@@ -45,6 +53,7 @@ public class VokabeltrainerGUI extends JFrame {
 	 * Create the frame.
 	 */
 	public VokabeltrainerGUI() {
+		super("Vokabeltrainer");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 600, 450);
 		contentPane = new JPanel();
@@ -73,9 +82,10 @@ public class VokabeltrainerGUI extends JFrame {
 			}
 		}
 		
-		JLabel vokabeltitel = new JLabel("Vokabeltrainer");
+		vokabeltitel = new JLabel("Vokabeltrainer");
+		vokabeltitel.setHorizontalAlignment(SwingConstants.CENTER);
 		vokabeltitel.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		vokabeltitel.setBounds(235, 11, 120, 30);
+		vokabeltitel.setBounds(10, 11, 555, 30);
 		contentPane.add(vokabeltitel);
 
 		JButton start = new JButton("Start");
@@ -107,9 +117,9 @@ public class VokabeltrainerGUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int loeschenAnswer = JOptionPane.showConfirmDialog(VokabeltrainerGUI.this,
-						"Sie sind dabei diese Datei zu löschen.Wollen Sie diese Lernkartei wirklich löschen?",
+						"Sie sind dabei diese Lernkartei samt ihren Fächern und Karten zu löschen. Wollen Sie diese Lernkartei wirklich löschen?",
 						"Achtung", JOptionPane.YES_NO_OPTION);
-				if (loeschenAnswer == 0) {
+				if (loeschenAnswer == JOptionPane.YES_OPTION) {
 					JOptionPane.showMessageDialog(VokabeltrainerGUI.this, "Die Lernkartei wurde erfolgreich gelöscht");
 					VokabeltrainerDB.loeschenLernkartei(num);
 				}
@@ -165,7 +175,7 @@ public class VokabeltrainerGUI extends JFrame {
 		});
 		contentPane.add(zurueck);
 
-		JScrollPane scrollPane = new JScrollPane(faecherListe);
+		scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 74, 564, 293);
 		contentPane.add(scrollPane);
 
@@ -186,9 +196,22 @@ public class VokabeltrainerGUI extends JFrame {
 		contentPane.add(neu);
 
 		pos = new JLabel();
-		pos.setHorizontalAlignment(SwingConstants.CENTER);
-		pos.setBounds(66, 48, 31, 14);
+		pos.setHorizontalAlignment(SwingConstants.LEFT);
+		pos.setBounds(79, 48, 57, 14);
 		contentPane.add(pos);
+		
+		JButton button = new JButton("+");
+		button.setBounds(423, 43, 50, 25);
+		button.setFocusPainted(false);
+		button.addActionListener(new ActionListener()
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//TODO
+			}
+		});
+		contentPane.add(button);
 		
 		updateView();
 	}
@@ -236,6 +259,39 @@ public class VokabeltrainerGUI extends JFrame {
 	}
 
 	private void updateView() {
+		Lernkartei l = VokabeltrainerDB.getLernkartei(num);
+		this.vokabeltitel.setText(l.getBeschreibung());
 		this.pos.setText(String.valueOf(num) + "/" + String.valueOf(VokabeltrainerDB.getLernkarteien().size()));
+		
+		List<Fach> faecher = VokabeltrainerDB.getFaecher(num);
+		String[][] faecher_desc = new String[faecher.size()][3];
+		
+		for(int i = 0; i < faecher.size(); i++){
+			faecher_desc[i][0] = faecher.get(i).getBeschreibung();
+			faecher_desc[i][1] = faecher.get(i).getGelerntAmEuropaeischString();
+			if(faecher.get(i).getGelerntAm() != null){
+				faecher_desc[i][2] = (faecher.get(i).getErinnerungFaellig()) ? "x" : "";
+			}else{
+				faecher_desc[i][2] = "";
+			}
+		}
+		
+		faecherListe = new JTable();
+		faecherListe.setModel(new DefaultTableModel(faecher_desc, columnNames){public boolean isCellEditable(int rowIndex, int columnIndex) { return false; }});
+		faecherListe.setFillsViewportHeight(true);
+		faecherListe.getTableHeader().setReorderingAllowed(false);
+		faecherListe.addMouseListener(new MouseAdapter() {
+	    public void mousePressed(MouseEvent mouseEvent) {
+	        JTable table =(JTable) mouseEvent.getSource();
+	        Point point = mouseEvent.getPoint();
+	        int row = table.rowAtPoint(point);
+	        if (mouseEvent.getClickCount() == 2) {
+            if(row != -1){
+            	
+            }
+	        }
+	    }
+		});
+		scrollPane.setViewportView(faecherListe);
 	}
 }

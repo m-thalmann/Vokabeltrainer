@@ -47,6 +47,7 @@ public class AendernLernkartei extends JDialog {
 		setModal(true);
 		setLocationRelativeTo(owner);
 		setResizable(false);
+		setDefaultCloseOperation(HIDE_ON_CLOSE);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
