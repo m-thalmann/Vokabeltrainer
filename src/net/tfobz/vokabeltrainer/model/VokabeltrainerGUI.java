@@ -18,6 +18,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import jdk.nashorn.internal.scripts.JO;
+
 public class VokabeltrainerGUI extends JFrame {
 
 	private JPanel contentPane;
@@ -108,12 +110,10 @@ public class VokabeltrainerGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				int loeschenAnswer = JOptionPane.showConfirmDialog(VokabeltrainerGUI.this,
 						"Sie sind dabei diese Datei zu löschen.Wollen Sie diese Lernkartei wirklich löschen?",
-						"Achtung", JOptionPane.OK_CANCEL_OPTION);
-				//System.out.println(loeschenAnswer);
-				if (loeschenAnswer == 2) {
-					dispose();
-				} else {
-					//Löschen
+						"Achtung", JOptionPane.YES_NO_OPTION);
+				if (loeschenAnswer == 0) {
+					JOptionPane.showMessageDialog(VokabeltrainerGUI.this, "Die Lernkartei wurde erfolgreich gelöscht");
+					VokabeltrainerDB.loeschenLernkartei(num);
 				}
 			}
 		});
