@@ -22,6 +22,8 @@ public class VokabeltrainerGUI extends JFrame {
 
 	private JPanel contentPane;
 	JList<String> faecherListe;
+	private int num = 0;
+	private JLabel pos = null;
 
 	/**
 	 * Launch the application.
@@ -49,7 +51,28 @@ public class VokabeltrainerGUI extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-
+		setLocationRelativeTo(null);
+		setResizable(false);
+		
+		VokabeltrainerDB.erstellenTabellen();
+		
+		if(VokabeltrainerDB.getLernkarteien().size() == 0){
+			if(JOptionPane.showConfirmDialog(this, "Sie besitzen noch keine Lernkartei. Wollen Sie eine neue anlegen?", "Willkommen", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+				NeueLernkartei nl = new NeueLernkartei(this);
+				nl.setVisible(true);
+				
+				if(!nl.isSaved()){
+					System.exit(0);
+				}else{
+					updateView();
+				}
+					
+				nl.dispose();
+			}else{
+				System.exit(0);
+			}
+		}
+		
 		JLabel vokabeltitel = new JLabel("Vokabeltrainer");
 		vokabeltitel.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		vokabeltitel.setBounds(235, 11, 120, 30);
@@ -71,28 +94,7 @@ public class VokabeltrainerGUI extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser importFileChooser = new JFileChooser();
-
-				importFileChooser.setMultiSelectionEnabled(false);
-				importFileChooser.setFileFilter(new FileNameExtensionFilter("Textdateien", "txt"));
-				importFileChooser.setAcceptAllFileFilterUsed(false);
-				
-				if(importFileChooser.showOpenDialog(VokabeltrainerGUI.this) == JFileChooser.APPROVE_OPTION){
-					String path = importFileChooser.getSelectedFile().getAbsolutePath();
-					
-					if(path.endsWith(".txt")){
-						File file = new File(path);
-						
-						if(!file.isDirectory() && file.isFile()){
-							
-						}
-						else{
-							JOptionPane.showMessageDialog(VokabeltrainerGUI.this, "Die Datei \"" + path + "\" existiert nicht.", "Achtung", JOptionPane.WARNING_MESSAGE);
-						}
-					}else{
-						JOptionPane.showMessageDialog(VokabeltrainerGUI.this, "Die Datei \"" + path + "\" ist keine Textdatei (*.txt)", "Achtung", JOptionPane.WARNING_MESSAGE);
-					}
-				}
+				importData();
 			}
 		});
 		contentPane.add(importieren);
@@ -123,9 +125,8 @@ public class VokabeltrainerGUI extends JFrame {
 		aendern.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				AendernLernkartei aenderFenster = new AendernLernkartei(VokabeltrainerGUI.this);
+				AendernLernkartei aenderFenster = new AendernLernkartei(VokabeltrainerGUI.this, num);
 				aenderFenster.setVisible(true);
-
 			}
 		});
 		contentPane.add(aendern);
@@ -133,11 +134,37 @@ public class VokabeltrainerGUI extends JFrame {
 		JButton vor = new JButton(">");
 		vor.setBounds(533, 378, 41, 23);
 		vor.setFocusPainted(false);
+		vor.addActionListener(new ActionListener()
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(num < VokabeltrainerDB.getLernkarteien().size()-1){
+					num++;
+				}else{
+					num = 0;
+				}
+				updateView();
+			}
+		});
 		contentPane.add(vor);
 
 		JButton zurueck = new JButton("<");
 		zurueck.setBounds(485, 378, 41, 23);
 		zurueck.setFocusPainted(false);
+		zurueck.addActionListener(new ActionListener()
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(num >= 1){
+					num--;
+				}else{
+					num = VokabeltrainerDB.getLernkarteien().size() -1;
+				}
+				updateView();
+			}
+		});
 		contentPane.add(zurueck);
 
 		JScrollPane scrollPane = new JScrollPane(faecherListe);
@@ -151,27 +178,66 @@ public class VokabeltrainerGUI extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int answer = JOptionPane.showConfirmDialog(VokabeltrainerGUI.this,
-						"Wollen Sie eine neue Lernkarte anlegen?", "Vokabeltrainer: Lernkartei anlegen",
-						JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null);
-				/*
-				 * int test = JOptionPane.YES_OPTION; int test2 =
-				 * JOptionPane.NO_OPTION;
-				 * 
-				 * System.out.println(test + " " + test2);
-				 */
-				if (answer == 0) {
-					dispose();
-				} else {
-					// Neuanlegen
-				}
+				NeueLernkartei nl = new NeueLernkartei(VokabeltrainerGUI.this);
+				nl.setVisible(true);
+				
+				num = 0;
+				updateView();
 			}
 		});
 		contentPane.add(neu);
 
-		JLabel abgearbeitet = new JLabel("0");
-		abgearbeitet.setHorizontalAlignment(SwingConstants.CENTER);
-		abgearbeitet.setBounds(66, 48, 31, 14);
-		contentPane.add(abgearbeitet);
+		pos = new JLabel();
+		pos.setHorizontalAlignment(SwingConstants.CENTER);
+		pos.setBounds(66, 48, 31, 14);
+		contentPane.add(pos);
+		
+		updateView();
+	}
+
+	protected void importData() {
+		JFileChooser importFileChooser = new JFileChooser();
+
+		importFileChooser.setMultiSelectionEnabled(false);
+		importFileChooser.setFileFilter(new FileNameExtensionFilter("Textdateien", "txt"));
+		importFileChooser.setAcceptAllFileFilterUsed(false);
+		
+		if(importFileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
+			String path = importFileChooser.getSelectedFile().getAbsolutePath();
+			
+			if(path.endsWith(".txt")){
+				File file = new File(path);
+				
+				if(!file.isDirectory() && file.isFile()){
+					switch(VokabeltrainerDB.importierenKarten(num, path)){
+						case -1:{
+							JOptionPane.showMessageDialog(this, "Importfehler ist aufgetreten!", "Fehler", JOptionPane.ERROR_MESSAGE);
+							break;
+						}
+						case -2:{
+							JOptionPane.showMessageDialog(this, "Importfehler ist aufgetreten! Die Datei existiert nicht", "Fehler", JOptionPane.ERROR_MESSAGE);
+							break;
+						}
+						case -3:{
+							JOptionPane.showMessageDialog(this, "Importfehler ist aufgetreten! Die Lernkartei mit der Nummer " + String.valueOf(num + 1) + " existiert nicht", "Fehler", JOptionPane.ERROR_MESSAGE);
+							break;
+						}
+						default:{
+							JOptionPane.showMessageDialog(this, "Daten wurden erfolgreich importiert!", "Ok", JOptionPane.INFORMATION_MESSAGE);
+							updateView();
+						}
+					}
+				}
+				else{
+					JOptionPane.showMessageDialog(this, "Die Datei \"" + path + "\" existiert nicht.", "Achtung", JOptionPane.WARNING_MESSAGE);
+				}
+			}else{
+				JOptionPane.showMessageDialog(this, "Die Datei \"" + path + "\" ist keine Textdatei (*.txt)", "Achtung", JOptionPane.WARNING_MESSAGE);
+			}
+		}
+	}
+
+	private void updateView() {
+		this.pos.setText(String.valueOf(num + 1) + "/" + String.valueOf(VokabeltrainerDB.getLernkarteien().size()));
 	}
 }
