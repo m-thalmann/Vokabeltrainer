@@ -18,13 +18,11 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import jdk.nashorn.internal.scripts.JO;
-
 public class VokabeltrainerGUI extends JFrame {
 
 	private JPanel contentPane;
 	JList<String> faecherListe;
-	private int num = 0;
+	private int num = 1;
 	private JLabel pos = null;
 
 	/**
@@ -139,10 +137,10 @@ public class VokabeltrainerGUI extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(num < VokabeltrainerDB.getLernkarteien().size()-1){
+				if(num < VokabeltrainerDB.getLernkarteien().size()){
 					num++;
 				}else{
-					num = 0;
+					num = 1;
 				}
 				updateView();
 			}
@@ -157,10 +155,10 @@ public class VokabeltrainerGUI extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(num >= 1){
+				if(num > 1){
 					num--;
 				}else{
-					num = VokabeltrainerDB.getLernkarteien().size() -1;
+					num = VokabeltrainerDB.getLernkarteien().size();
 				}
 				updateView();
 			}
@@ -238,6 +236,6 @@ public class VokabeltrainerGUI extends JFrame {
 	}
 
 	private void updateView() {
-		this.pos.setText(String.valueOf(num + 1) + "/" + String.valueOf(VokabeltrainerDB.getLernkarteien().size()));
+		this.pos.setText(String.valueOf(num) + "/" + String.valueOf(VokabeltrainerDB.getLernkarteien().size()));
 	}
 }

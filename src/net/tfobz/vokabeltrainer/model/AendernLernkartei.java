@@ -42,7 +42,6 @@ public class AendernLernkartei extends JDialog {
 	 */
 	public AendernLernkartei(JFrame owner, int pos) {
 		super(owner, "Vokabeltrainer: Lernkartei ändern");
-		System.out.println("1");
 		this.num = pos;
 		setBounds(100, 100, 439, 400);
 		setModal(true);
@@ -121,7 +120,7 @@ public class AendernLernkartei extends JDialog {
 			lblBeschreibungErstesWort.setHorizontalAlignment(SwingConstants.LEFT);
 			field.add(lblBeschreibungErstesWort);
 			
-			textField_1 = new JTextField(VokabeltrainerDB.getLernkartei(num).wortEinsBeschreibung);
+			textField_1 = new JTextField(VokabeltrainerDB.getLernkartei(num).getWortEinsBeschreibung());
 			textField_1.setBounds(191, 23, 209, 22);
 			field.add(textField_1);
 			textField_1.setColumns(20);
@@ -130,7 +129,7 @@ public class AendernLernkartei extends JDialog {
 			lblBeschreibungZweitesWort.setBounds(14, 53, 181, 16);
 			field.add(lblBeschreibungZweitesWort);
 			
-			textField_2 = new JTextField(VokabeltrainerDB.getLernkartei(num).wortZweiBeschreibung);
+			textField_2 = new JTextField(VokabeltrainerDB.getLernkartei(num).getWortZweiBeschreibung());
 			textField_2.setBounds(191, 50, 209, 22);
 			field.add(textField_2);
 			textField_2.setColumns(20);
@@ -140,14 +139,14 @@ public class AendernLernkartei extends JDialog {
 			{
 				erstesWort = new JRadioButton("Erstes Wort -> Zweites Wort");
 				erstesWort.setBounds(10, 238, 200, 23);
-				erstesWort.setSelected(VokabeltrainerDB.getLernkartei(num).richtung);
+				erstesWort.setSelected(VokabeltrainerDB.getLernkartei(num).getRichtung());
 				contentPanel.add(erstesWort);
 				sprache.add(erstesWort);
 			}
 			{
 				zweitesWort = new JRadioButton("Zweites Wort -> Erstes Wort");
 				zweitesWort.setBounds(10, 264, 200, 23);
-				zweitesWort.setSelected(!VokabeltrainerDB.getLernkartei(num).richtung);
+				zweitesWort.setSelected(!VokabeltrainerDB.getLernkartei(num).getRichtung());
 				contentPanel.add(zweitesWort);
 				sprache.add(zweitesWort);
 			}
@@ -155,7 +154,7 @@ public class AendernLernkartei extends JDialog {
 			{
 				grossKleinBox = new JCheckBox("Gro\u00DF/Kleinschreibung");
 				grossKleinBox.setBounds(259, 238, 165, 23);
-				grossKleinBox.setSelected(VokabeltrainerDB.getLernkartei(num).grossKleinschreibung);
+				grossKleinBox.setSelected(VokabeltrainerDB.getLernkartei(num).getGrossKleinschreibung());
 				contentPanel.add(grossKleinBox);
 			}
 		}
