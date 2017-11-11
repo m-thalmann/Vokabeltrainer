@@ -42,6 +42,7 @@ public class AendernLernkartei extends JDialog {
 	 */
 	public AendernLernkartei(JFrame owner, int pos) {
 		super(owner, "Vokabeltrainer: Lernkartei ändern");
+		System.out.println("1");
 		this.num = pos;
 		setBounds(100, 100, 439, 400);
 		setModal(true);
@@ -62,7 +63,7 @@ public class AendernLernkartei extends JDialog {
 			contentPanel.add(lblBeschreibung);
 		}
 		
-		textField = new JTextField(VokabeltrainerDB.getLernkartei(num).beschreibung);
+		textField = new JTextField(VokabeltrainerDB.getLernkartei(num).getBeschreibung());
 		textField.setBounds(10, 85, 414, 20);
 		contentPanel.add(textField);
 		textField.setColumns(10);
