@@ -60,7 +60,6 @@ public class NeuesFach extends JDialog
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Fach f = new Fach(-1, textField.getText(), Integer.parseInt(spinner.getValue().toString()), null);
-				System.out.println(f.getBeschreibung() + " " + f.getNummer() + " " + f.getErinnerungsIntervall());
 				if(VokabeltrainerDB.hinzufuegenFach(lnummer, f) == 0){
 					saved = true;
 					setVisible(false);

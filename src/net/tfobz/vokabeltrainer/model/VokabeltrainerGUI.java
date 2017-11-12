@@ -74,7 +74,7 @@ public class VokabeltrainerGUI extends JFrame {
 			if(!nl.isSaved()){
 				System.exit(0);
 			}else{
-				num = VokabeltrainerDB.getLernkarteien().size();
+				setNum(VokabeltrainerDB.getLernkarteien().size());
 			}
 				
 			nl.dispose();
@@ -120,7 +120,7 @@ public class VokabeltrainerGUI extends JFrame {
 				if (loeschenAnswer == JOptionPane.YES_OPTION) {
 					if(VokabeltrainerDB.loeschenLernkartei(num) == 0){
 						JOptionPane.showMessageDialog(VokabeltrainerGUI.this, "Die Lernkartei wurde erfolgreich gelöscht");
-						num = 1;
+						setNum(1);
 						updateView();
 					}
 				}
@@ -155,7 +155,7 @@ public class VokabeltrainerGUI extends JFrame {
 				if(num < VokabeltrainerDB.getLernkarteien().size()){
 					num++;
 				}else{
-					num = 1;
+					setNum(1);
 				}
 				updateView();
 			}
@@ -173,7 +173,7 @@ public class VokabeltrainerGUI extends JFrame {
 				if(num > 1){
 					num--;
 				}else{
-					num = VokabeltrainerDB.getLernkarteien().size();
+					setNum(VokabeltrainerDB.getLernkarteien().size());
 				}
 				updateView();
 			}
@@ -194,7 +194,7 @@ public class VokabeltrainerGUI extends JFrame {
 				NeueLernkartei nl = new NeueLernkartei(VokabeltrainerGUI.this);
 				nl.setVisible(true);
 				if(nl.isSaved()){
-					num = VokabeltrainerDB.getLernkarteien().size();
+					setNum(VokabeltrainerDB.getLernkarteien().size());
 					updateView();
 				}
 				nl.dispose();
@@ -225,6 +225,15 @@ public class VokabeltrainerGUI extends JFrame {
 		contentPane.add(button);
 		
 		updateView();
+		
+		System.out.println(VokabeltrainerDB.getKarten(1));
+	}
+	
+	private void setNum(int num){
+		if(this.num != num){
+			this.num = num;
+			updateView();
+		}
 	}
 
 	private void importData() {
@@ -241,7 +250,6 @@ public class VokabeltrainerGUI extends JFrame {
 				File file = new File(path);
 				
 				if(!file.isDirectory() && file.isFile()){
-					System.out.println(num);
 					switch(VokabeltrainerDB.importierenKarten(num, path)){
 						case -1:{
 							JOptionPane.showMessageDialog(this, "Importfehler ist aufgetreten!", "Fehler", JOptionPane.ERROR_MESSAGE);
@@ -311,7 +319,7 @@ public class VokabeltrainerGUI extends JFrame {
 	        int row = table.rowAtPoint(point);
 	        if (mouseEvent.getClickCount() == 2) {
             if(row != -1){
-            	ViewFach v = new ViewFach(VokabeltrainerGUI.this, 1);//TODO
+            	ViewFach v = new ViewFach(VokabeltrainerGUI.this, num, row);
             	v.setVisible(true);
             	v.dispose();
             }
