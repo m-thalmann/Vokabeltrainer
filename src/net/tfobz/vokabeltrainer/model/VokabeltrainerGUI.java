@@ -212,17 +212,19 @@ public class VokabeltrainerGUI extends JFrame {
 		button.setFocusPainted(false);
 		button.addActionListener(new ActionListener()
 		{
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO
+				NeuesFach nf = new NeuesFach(VokabeltrainerGUI.this, num);
+				nf.setVisible(true);
+				if(nf.isSaved()){
+					updateView();
+				}
+				nf.dispose();
 			}
 		});
 		contentPane.add(button);
 		
 		updateView();
-		
-		//System.out.println(VokabeltrainerDB.importierenKarten(1, "C:\\Users\\matth\\Desktop\\imports\\kartenOhneFaecher.txt"));
 	}
 
 	private void importData() {
@@ -309,7 +311,7 @@ public class VokabeltrainerGUI extends JFrame {
 	        int row = table.rowAtPoint(point);
 	        if (mouseEvent.getClickCount() == 2) {
             if(row != -1){
-            	ViewFach v = new ViewFach(VokabeltrainerGUI.this, row + 1);
+            	ViewFach v = new ViewFach(VokabeltrainerGUI.this, 1);//TODO
             	v.setVisible(true);
             	v.dispose();
             }
