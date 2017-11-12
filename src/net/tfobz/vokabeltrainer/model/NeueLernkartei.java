@@ -137,6 +137,7 @@ public class NeueLernkartei extends JDialog {
 			{
 				erstesWort = new JRadioButton("Erstes Wort -> Zweites Wort");
 				erstesWort.setBounds(10, 238, 200, 23);
+				erstesWort.setSelected(true);
 				contentPanel.add(erstesWort);
 				sprache.add(erstesWort);
 			}
