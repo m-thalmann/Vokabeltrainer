@@ -208,7 +208,7 @@ public class VokabeltrainerGUI extends JFrame {
 		contentPane.add(pos);
 		
 		JButton button = new JButton("+");
-		button.setBounds(423, 43, 50, 25);
+		button.setBounds(423, 44, 50, 23);
 		button.setFocusPainted(false);
 		button.addActionListener(new ActionListener()
 		{
@@ -225,8 +225,6 @@ public class VokabeltrainerGUI extends JFrame {
 		contentPane.add(button);
 		
 		updateView();
-		
-		System.out.println(VokabeltrainerDB.getKarten(1));
 	}
 	
 	private void setNum(int num){
@@ -321,6 +319,9 @@ public class VokabeltrainerGUI extends JFrame {
             if(row != -1){
             	ViewFach v = new ViewFach(VokabeltrainerGUI.this, num, row);
             	v.setVisible(true);
+            	if(v.isSaved()){
+            		updateView();
+            	}
             	v.dispose();
             }
 	        }

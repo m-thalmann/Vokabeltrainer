@@ -1,28 +1,41 @@
 package net.tfobz.vokabeltrainer.model;
 
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.JSpinner;
+import javax.swing.table.DefaultTableModel;
 
 public class ViewFach extends JDialog
 {
 	private JScrollPane scrollKarten = null;
 	private JTable tableKarten = null;
+	private JTextField textField;
+	private JSpinner spinner;
 	
 	private String[] columnNames = {"Wort 1", "Wort 2", "Richtung", "Groß-/Kleinschreibung beachten"};
 	private int lnummer;
 	private int fnummer;
-	private JTextField textField;
+	private boolean saved = false;
+	
+	private Fach f;
+	private List<Karte> karten;
 	
 	public ViewFach(JFrame owner, int numLernkartei, int numFach) {
 		super(owner, "Vokabeltrainer: Fachansicht");
@@ -41,8 +54,8 @@ public class ViewFach extends JDialog
 		lblFachBearbeiten.setBounds(10, 11, 200, 25);
 		this.getContentPane().add(lblFachBearbeiten);
 		
-		Fach f = VokabeltrainerDB.getFaecher(lnummer).get(fnummer);
-		List<Karte> karten = VokabeltrainerDB.getKarten(f.getNummer());
+		f = VokabeltrainerDB.getFaecher(lnummer).get(fnummer);
+		karten = VokabeltrainerDB.getKarten(f.getNummer());
 		
 		String[][] karten_desc = new String[karten.size()][4];
 		
@@ -58,17 +71,65 @@ public class ViewFach extends JDialog
 		
 		tableKarten = new JTable();
 		tableKarten.setModel(new DefaultTableModel(karten_desc, columnNames){public boolean isCellEditable(int rowIndex, int columnIndex) { return false; }});
+		tableKarten.setFillsViewportHeight(true);
+		tableKarten.getTableHeader().setReorderingAllowed(false);
+		tableKarten.addMouseListener(new MouseAdapter() {
+	    public void mousePressed(MouseEvent mouseEvent) {
+	        JTable table =(JTable) mouseEvent.getSource();
+	        Point point = mouseEvent.getPoint();
+	        int row = table.rowAtPoint(point);
+	        if (mouseEvent.getClickCount() == 2) {
+            if(row != -1){
+            	//TODO
+            }
+	        }
+	    }
+		});
 		scrollKarten = new JScrollPane(tableKarten);
 		scrollKarten.setBounds(0, 88, 494, 326);
 		this.getContentPane().add(scrollKarten);
 		
 		JButton btnNewButton = new JButton("Speichern");
-		btnNewButton.setBounds(385, 427, 97, 25);
-		getContentPane().add(btnNewButton);
+		btnNewButton.setFocusPainted(false);
+		btnNewButton.setVerticalAlignment(SwingConstants.TOP);
+		btnNewButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(f.getBeschreibung() != textField.getText() || f.getErinnerungsIntervall() != Integer.parseInt(spinner.getValue().toString())){
+					switch(VokabeltrainerDB.aendernFach(new Fach(f.getNummer(), textField.getText(), Integer.parseInt(spinner.getValue().toString()), f.getGelerntAm()))){
+						case -1:{
+							JOptionPane.showMessageDialog(ViewFach.this, "Ein Datenbankfehler ist aufgetreten!", "Fehler", JOptionPane.ERROR_MESSAGE);
+							break;
+						}
+						case -2:{
+							JOptionPane.showMessageDialog(ViewFach.this, "Ein Validierungsfehler ist aufgetreten! Überprüfen Sie ihre Eingaben.", "Fehler", JOptionPane.ERROR_MESSAGE);
+							break;
+						}
+						default:{
+							saved = true;
+						}
+					}
+				}else{
+					saved = true;
+				}
+				
+				if(saved){
+					setVisible(false);
+				}
+			}
+		});
 		
 		JButton btnNewButton_1 = new JButton("Abbrechen");
-		btnNewButton_1.setBounds(276, 427, 97, 25);
-		getContentPane().add(btnNewButton_1);
+		btnNewButton_1.setFocusPainted(false);
+		btnNewButton_1.setVerticalAlignment(SwingConstants.TOP);
+		btnNewButton_1.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+			}
+		});
 		
 		textField = new JTextField();
 		textField.setBounds(10, 49, 216, 22);
@@ -81,14 +142,55 @@ public class ViewFach extends JDialog
 		lblErinnerungsintervall.setBounds(282, 52, 158, 16);
 		getContentPane().add(lblErinnerungsintervall);
 		
-		JSpinner spinner = new JSpinner();
+		spinner = new JSpinner();
 		spinner.setBounds(452, 49, 30, 22);
 		spinner.setValue(f.getErinnerungsIntervall());
 		getContentPane().add(spinner);
 		
 		JButton btnNeueKarte = new JButton("Neue Karte");
-		btnNeueKarte.setBounds(10, 427, 97, 25);
-		getContentPane().add(btnNeueKarte);
+		btnNeueKarte.setFocusPainted(false);
+		btnNeueKarte.setVerticalAlignment(SwingConstants.TOP);
+		btnNeueKarte.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//TODO
+			}
+		});
 		
+		JButton btnLschen = new JButton("Karten l\u00F6schen");
+		btnLschen.setFocusPainted(false);
+		btnLschen.setVerticalAlignment(SwingConstants.TOP);
+		btnLschen.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(JOptionPane.showConfirmDialog(ViewFach.this, "Wollen Sie wirklich dieses Fach mit all seinen Karten löschen?", "Achtung", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+					List<Karte> karten = VokabeltrainerDB.getKarten(f.getNummer());
+					
+					for(int i = 0; i < karten.size(); i++){
+						VokabeltrainerDB.loeschenKarte(karten.get(i).getNummer());
+					}
+					
+					JOptionPane.showMessageDialog(ViewFach.this, "Karten wurden erfolgreich gelöscht!", "Information", JOptionPane.INFORMATION_MESSAGE);
+					
+					setVisible(false);
+				}
+			}
+		});
+		
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setBounds(10, 420, 472, 35);
+		
+		getContentPane().add(buttonPanel);
+		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		buttonPanel.add(btnNeueKarte);
+		buttonPanel.add(btnLschen);
+		buttonPanel.add(btnNewButton_1);
+		buttonPanel.add(btnNewButton);
+		
+	}
+	
+	public boolean isSaved(){
+		return this.saved;
 	}
 }
