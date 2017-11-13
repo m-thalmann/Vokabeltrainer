@@ -33,11 +33,6 @@ public class NeueLernkartei extends JDialog {
 	private JRadioButton zweitesWort = null;
 	private JCheckBox grossKleinBox = null;
 	
-	/**
-	 * Create the dialog.
-	 * @param neu 
-	 * @param vokabeltrainerGUI 
-	 */
 	public NeueLernkartei(JFrame owner) {
 		super(owner, "Vokabeltrainer: Lernkartei hinzufügen");
 		setBounds(100, 100, 439, 400);

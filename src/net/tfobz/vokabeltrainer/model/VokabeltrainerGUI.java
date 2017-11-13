@@ -226,10 +226,10 @@ public class VokabeltrainerGUI extends JFrame {
 		pos.setBounds(79, 48, 57, 14);
 		contentPane.add(pos);
 		
-		JButton button = new JButton("+");
-		button.setBounds(423, 44, 50, 23);
-		button.setFocusPainted(false);
-		button.addActionListener(new ActionListener()
+		JButton btnNeuesFach = new JButton("Neues Fach");
+		btnNeuesFach.setBounds(373, 44, 100, 23);
+		btnNeuesFach.setFocusPainted(false);
+		btnNeuesFach.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -241,7 +241,19 @@ public class VokabeltrainerGUI extends JFrame {
 				nf.dispose();
 			}
 		});
-		contentPane.add(button);
+		contentPane.add(btnNeuesFach);
+		
+		JButton btnWrterAnzeigen = new JButton("W\u00F6rter anzeigen");
+		btnWrterAnzeigen.setBounds(234, 43, 127, 25);
+		btnWrterAnzeigen.setFocusPainted(false);
+		btnWrterAnzeigen.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		contentPane.add(btnWrterAnzeigen);
 		
 		setVisible(true);
 		
