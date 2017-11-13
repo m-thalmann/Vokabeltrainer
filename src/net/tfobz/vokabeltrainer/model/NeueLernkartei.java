@@ -89,7 +89,8 @@ public class NeueLernkartei extends JDialog {
 				{
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						switch(VokabeltrainerDB.hinzufuegenLernkartei(new Lernkartei(textField.getText(), textField_1.getText(), textField_2.getText(), erstesWort.isSelected(), grossKleinBox.isSelected()))){
+						Lernkartei l = new Lernkartei(textField.getText(), textField_1.getText(), textField_2.getText(), erstesWort.isSelected(), grossKleinBox.isSelected());
+						switch(VokabeltrainerDB.hinzufuegenLernkartei(l)){
 							case -1:{
 								JOptionPane.showMessageDialog(NeueLernkartei.this, "Ein Datenbankfehler ist aufgetreten!", "Fehler", JOptionPane.ERROR_MESSAGE);
 								break;
@@ -99,8 +100,12 @@ public class NeueLernkartei extends JDialog {
 								break;
 							}
 							default:{
-								saved = true;
-								setVisible(false);
+								if(VokabeltrainerDB.getLernkarteien().get(VokabeltrainerDB.getLernkarteien().size() - 1).equals(l)){
+									saved = true;
+									setVisible(false);
+								}else{
+									JOptionPane.showMessageDialog(NeueLernkartei.this, "Ein Datenbankfehler ist aufgetreten", "Fehler", JOptionPane.ERROR_MESSAGE);
+								}
 							}
 						}
 					}
