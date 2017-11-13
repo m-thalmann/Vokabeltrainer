@@ -19,6 +19,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
@@ -37,6 +39,13 @@ public class VokabeltrainerGUI extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException | InstantiationException
+				| IllegalAccessException | UnsupportedLookAndFeelException e1) {
+			e1.printStackTrace();
+		}
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -53,6 +62,11 @@ public class VokabeltrainerGUI extends JFrame {
 	 * Create the frame.
 	 */
 	public VokabeltrainerGUI() {
+		//TODO
+		//TODO
+		//TODO: nicht mit getLernkartei(num) sondern mit getLernkarteien().get(num -1) arbeiten
+		//TODO
+		//TODO
 		super("Vokabeltrainer");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 600, 450);
@@ -114,6 +128,8 @@ public class VokabeltrainerGUI extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				//TODO: Falls keines mehr programm beenden
+				//TODO: Beim löschen nummer gelöscht oder nachrücken?
 				int loeschenAnswer = JOptionPane.showConfirmDialog(VokabeltrainerGUI.this,
 						"Sie sind dabei diese Lernkartei samt ihren Fächern und Karten zu löschen. Wollen Sie diese Lernkartei wirklich löschen?",
 						"Achtung", JOptionPane.YES_NO_OPTION);
