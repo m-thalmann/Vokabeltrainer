@@ -15,7 +15,8 @@ public class AendernKarte extends JDialog
 {
 	
 	private int num = 0;
-	private boolean gespeichert = false;
+	private boolean saved = false;
+	private JFrame ownerFrame = null;
 
 	public AendernKarte(JFrame owner, int nummerKarte) {
 		super(owner, "Vokabeltrainer: Karte bearbeiten");
@@ -27,6 +28,7 @@ public class AendernKarte extends JDialog
 		setLocationRelativeTo(owner);
 		
 		this.num = nummerKarte;
+		this.ownerFrame = owner;
 
 		JLabel titel, first, second;
 		JButton ok, cancel;
@@ -62,6 +64,23 @@ public class AendernKarte extends JDialog
 
 		this.getContentPane().add(firstText);
 		this.getContentPane().add(secondText);
+		
+		JButton loeschen = new JButton("Löschen");
+		loeschen.setBounds(146, 116, 100, 23);
+		loeschen.setFocusPainted(false);
+		loeschen.addActionListener(new ActionListener()
+		{
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (JOptionPane.showConfirmDialog(ownerFrame, "Wollen Sie wirklich alle Karten löschen?", "Warnung", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+					VokabeltrainerDB.loeschenKarte(num);
+					saved = true;
+					setVisible(false);
+				}
+			}
+		});
+		this.getContentPane().add(loeschen);
 
 		ok = new JButton("Speichern");
 		ok.setBounds(278, 115, 100, 25);
@@ -94,7 +113,7 @@ public class AendernKarte extends JDialog
 						break;
 					}
 					default: {
-						gespeichert = true;
+						saved = true;
 						setVisible(false);
 					}
 				}
@@ -104,7 +123,7 @@ public class AendernKarte extends JDialog
 		this.getContentPane().add(ok);
 
 		cancel = new JButton("Abbrechen");
-		cancel.setBounds(173, 115, 100, 25);
+		cancel.setBounds(10, 115, 100, 25);
 		cancel.setFocusPainted(false);
 		cancel.addActionListener(new ActionListener()
 		{
@@ -121,6 +140,6 @@ public class AendernKarte extends JDialog
 	}
 
 	public boolean isSaved() {
-		return this.gespeichert;
+		return this.saved;
 	}
 }
