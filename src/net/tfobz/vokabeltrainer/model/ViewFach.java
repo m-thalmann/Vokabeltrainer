@@ -161,7 +161,7 @@ public class ViewFach extends JDialog
 				int row = table.rowAtPoint(point);
 				if (mouseEvent.getClickCount() == 2) {
 					if (row != -1) {
-						AendernKarte ak = new AendernKarte(ownerFrame, kartenNummern[row]);
+						AendernKarte ak = new AendernKarte(ownerFrame, lnummer, kartenNummern[row]);
 						if(ak.isSaved()){ 
 							updateView();
 						}

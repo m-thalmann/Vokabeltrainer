@@ -18,7 +18,7 @@ public class AendernKarte extends JDialog
 	private boolean saved = false;
 	private JFrame ownerFrame = null;
 
-	public AendernKarte(JFrame owner, int nummerKarte) {
+	public AendernKarte(JFrame owner, int nummerLernkartei, int nummerKarte) {
 		super(owner, "Vokabeltrainer: Karte bearbeiten");
 		getContentPane().setLayout(null);
 		setSize(397, 179);
@@ -40,12 +40,10 @@ public class AendernKarte extends JDialog
 		titel.setBounds(10, 11, 200, 25);
 		this.getContentPane().add(titel);
 
-		first = new JLabel(VokabeltrainerDB.getLernkartei(num)
-				.getWortEinsBeschreibung() + ": ");
+		first = new JLabel(VokabeltrainerDB.getLernkartei(nummerLernkartei).getWortEinsBeschreibung() + ": ");
 		first.setBounds(10, 44, 100, 20);
 
-		second = new JLabel(VokabeltrainerDB.getLernkartei(num)
-				.getWortZweiBeschreibung() + ": ");
+		second = new JLabel(VokabeltrainerDB.getLernkartei(nummerLernkartei).getWortZweiBeschreibung() + ": ");
 		second.setBounds(10, 84, 100, 20);
 		
 		this.getContentPane().add(first);
@@ -73,7 +71,7 @@ public class AendernKarte extends JDialog
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (JOptionPane.showConfirmDialog(ownerFrame, "Wollen Sie wirklich alle Karten löschen?", "Warnung", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+				if (JOptionPane.showConfirmDialog(ownerFrame, "Wollen Sie wirklich diese Karte löschen?", "Warnung", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 					VokabeltrainerDB.loeschenKarte(num);
 					saved = true;
 					setVisible(false);
