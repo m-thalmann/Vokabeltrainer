@@ -96,7 +96,29 @@ public class VokabeltrainerGUI extends JFrame {
 		{
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(VokabeltrainerGUI.this, "Not working yet, cunt");
+				 int nummerFachStart = -1;
+	                if(faecherListe.getSelectedRow() != -1){
+	                    switch(JOptionPane.showConfirmDialog(VokabeltrainerGUI.this, "Nur ab ausgewähltem Fach lernen?", "Frage", JOptionPane.YES_NO_CANCEL_OPTION)){
+	                        case JOptionPane.NO_OPTION:{
+	                            nummerFachStart = 0;
+	                            break;
+	                        }
+	                        case JOptionPane.YES_OPTION:{
+	                            nummerFachStart = faecherListe.getSelectedRow();
+	                            break;
+	                        }
+	                    }
+	                }else{
+	                    nummerFachStart = 0;
+	                }
+	                
+	                if(nummerFachStart >= 0){
+	                    LernenGUI lg = new LernenGUI(VokabeltrainerGUI.this, l.getNummer(), nummerFachStart);
+	                    if(lg.hasChanges()){
+	                        updateView();
+	                    }
+	                    lg.dispose();
+	                }
 			}
 		});
 		contentPane.add(start);
