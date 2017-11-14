@@ -36,9 +36,6 @@ public class VokabeltrainerGUI extends JFrame {
 	private JScrollPane scrollPane= null;
 	private Lernkartei l = null;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -95,6 +92,13 @@ public class VokabeltrainerGUI extends JFrame {
 		JButton start = new JButton("Start");
 		start.setBounds(485, 44, 89, 23);
 		start.setFocusPainted(false);
+		start.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(VokabeltrainerGUI.this, "Not working yet, cunt");
+			}
+		});
 		contentPane.add(start);
 
 		JLabel lernkartei = new JLabel("Lernkartei:");
@@ -157,7 +161,6 @@ public class VokabeltrainerGUI extends JFrame {
 
 			public void actionPerformed(ActionEvent e) {
 				AendernLernkartei aenderFenster = new AendernLernkartei(VokabeltrainerGUI.this, l.getNummer());
-				aenderFenster.setVisible(true);
 				if(aenderFenster.isSaved()){
 					updateView();
 				}
@@ -212,7 +215,6 @@ public class VokabeltrainerGUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				NeueLernkartei nl = new NeueLernkartei(VokabeltrainerGUI.this);
-				nl.setVisible(true);
 				if(nl.isSaved()){
 					setNum(VokabeltrainerDB.getLernkarteien().size() - 1);
 				}
@@ -234,7 +236,6 @@ public class VokabeltrainerGUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				NeuesFach nf = new NeuesFach(VokabeltrainerGUI.this, l.getNummer());
-				nf.setVisible(true);
 				if(nf.isSaved()){
 					updateView();
 				}
@@ -243,14 +244,15 @@ public class VokabeltrainerGUI extends JFrame {
 		});
 		contentPane.add(btnNeuesFach);
 		
-		JButton btnWrterAnzeigen = new JButton("W\u00F6rter anzeigen");
+		JButton btnWrterAnzeigen = new JButton("Karten anzeigen");
 		btnWrterAnzeigen.setBounds(234, 43, 127, 25);
 		btnWrterAnzeigen.setFocusPainted(false);
 		btnWrterAnzeigen.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				ViewKarten vk = new ViewKarten(VokabeltrainerGUI.this, VokabeltrainerDB.getLernkarteien().get(num).getNummer());
+				vk.dispose();
 			}
 		});
 		contentPane.add(btnWrterAnzeigen);
@@ -351,7 +353,6 @@ public class VokabeltrainerGUI extends JFrame {
 	        if (mouseEvent.getClickCount() == 2) {
             if(row != -1){
             	ViewFach v = new ViewFach(VokabeltrainerGUI.this, l.getNummer(), row);
-            	v.setVisible(true);
             	if(v.isSaved()){
             		updateView();
             	}

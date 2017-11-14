@@ -35,11 +35,6 @@ public class AendernLernkartei extends JDialog {
 	
 	private int num = 0;
 	
-	/**
-	 * Create the dialog.
-	 * @param neu 
-	 * @param vokabeltrainerGUI 
-	 */
 	public AendernLernkartei(JFrame owner, int pos) {
 		super(owner, "Vokabeltrainer: Lernkartei ändern");
 		this.num = pos;
@@ -141,6 +136,7 @@ public class AendernLernkartei extends JDialog {
 				erstesWort = new JRadioButton("Erstes Wort -> Zweites Wort");
 				erstesWort.setBounds(10, 238, 200, 23);
 				erstesWort.setSelected(VokabeltrainerDB.getLernkartei(num).getRichtung());
+				erstesWort.setEnabled(false);
 				contentPanel.add(erstesWort);
 				sprache.add(erstesWort);
 			}
@@ -148,6 +144,7 @@ public class AendernLernkartei extends JDialog {
 				zweitesWort = new JRadioButton("Zweites Wort -> Erstes Wort");
 				zweitesWort.setBounds(10, 264, 200, 23);
 				zweitesWort.setSelected(!VokabeltrainerDB.getLernkartei(num).getRichtung());
+				zweitesWort.setEnabled(false);
 				contentPanel.add(zweitesWort);
 				sprache.add(zweitesWort);
 			}
@@ -156,9 +153,12 @@ public class AendernLernkartei extends JDialog {
 				grossKleinBox = new JCheckBox("Gro\u00DF/Kleinschreibung");
 				grossKleinBox.setBounds(259, 238, 165, 23);
 				grossKleinBox.setSelected(VokabeltrainerDB.getLernkartei(num).getGrossKleinschreibung());
+				grossKleinBox.setEnabled(false);
 				contentPanel.add(grossKleinBox);
 			}
 		}
+		
+		setVisible(true);
 	}
 	
 	public boolean isSaved(){

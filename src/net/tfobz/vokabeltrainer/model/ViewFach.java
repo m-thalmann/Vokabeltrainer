@@ -26,6 +26,7 @@ public class ViewFach extends JDialog
 	private JTable tableKarten = null;
 	private JTextField textField;
 	private JSpinner spinner;
+	private JFrame ownerFrame = null;
 	
 	private String[] columnNames = {"Wort 1", "Wort 2"};
 	private int lnummer;
@@ -46,6 +47,7 @@ public class ViewFach extends JDialog
 		
 		this.lnummer = numLernkartei;
 		this.fnummer = numFach;
+		this.ownerFrame = owner;
 		
 		JLabel lblFachBearbeiten = new JLabel("Fach bearbeiten");
 		lblFachBearbeiten.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -53,35 +55,8 @@ public class ViewFach extends JDialog
 		this.getContentPane().add(lblFachBearbeiten);
 		
 		f = VokabeltrainerDB.getFaecher(lnummer).get(fnummer);
-		karten = VokabeltrainerDB.getKarten(f.getNummer());
 		
-		String[][] karten_desc = new String[karten.size()][2];
-		
-		for(int i = 0; i < karten.size(); i++){
-			karten_desc[i][0] = karten.get(i).getWortEins();
-			karten_desc[i][1] = karten.get(i).getWortZwei();
-		}
-		
-		columnNames[0] = VokabeltrainerDB.getLernkartei(lnummer).getWortEinsBeschreibung();
-		columnNames[1] = VokabeltrainerDB.getLernkartei(lnummer).getWortZweiBeschreibung();
-		
-		tableKarten = new JTable();
-		tableKarten.setModel(new DefaultTableModel(karten_desc, columnNames){public boolean isCellEditable(int rowIndex, int columnIndex) { return false; }});
-		tableKarten.setFillsViewportHeight(true);
-		tableKarten.getTableHeader().setReorderingAllowed(false);
-		tableKarten.addMouseListener(new MouseAdapter() {
-	    public void mousePressed(MouseEvent mouseEvent) {
-	        JTable table =(JTable) mouseEvent.getSource();
-	        Point point = mouseEvent.getPoint();
-	        int row = table.rowAtPoint(point);
-	        if (mouseEvent.getClickCount() == 2) {
-            if(row != -1){
-            	//TODO
-            }
-	        }
-	    }
-		});
-		scrollKarten = new JScrollPane(tableKarten);
+		scrollKarten = new JScrollPane();
 		scrollKarten.setBounds(0, 88, 494, 326);
 		this.getContentPane().add(scrollKarten);
 		
@@ -93,11 +68,11 @@ public class ViewFach extends JDialog
 		
 		JLabel lblErinnerungsintervall = new JLabel("Erinnerungsintervall:");
 		lblErinnerungsintervall.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblErinnerungsintervall.setBounds(282, 52, 158, 16);
+		lblErinnerungsintervall.setBounds(270, 52, 158, 16);
 		getContentPane().add(lblErinnerungsintervall);
 		
 		spinner = new JSpinner();
-		spinner.setBounds(452, 49, 30, 22);
+		spinner.setBounds(440, 49, 42, 22);
 		spinner.setValue(f.getErinnerungsIntervall());
 		getContentPane().add(spinner);
 		
@@ -147,6 +122,56 @@ public class ViewFach extends JDialog
 			}
 		});
 		
+		updateView();
+		
+		setVisible(true);
+	}
+	
+	private void updateView() {
+		karten = VokabeltrainerDB.getKarten(f.getNummer());
+
+		String[][] karten_desc = new String[karten.size()][2];
+		final int[] kartenNummern = new int[karten.size()];
+
+		for (int i = 0; i < karten.size(); i++) {
+			karten_desc[i][0] = karten.get(i).getWortEins();
+			karten_desc[i][1] = karten.get(i).getWortZwei();
+			kartenNummern[i] = karten.get(i).getNummer();
+		}
+
+		columnNames[0] = VokabeltrainerDB.getLernkartei(lnummer)
+				.getWortEinsBeschreibung();
+		columnNames[1] = VokabeltrainerDB.getLernkartei(lnummer)
+				.getWortZweiBeschreibung();
+
+		tableKarten = new JTable();
+		tableKarten.setModel(new DefaultTableModel(karten_desc, columnNames)
+		{
+			public boolean isCellEditable(int rowIndex, int columnIndex) {
+				return false;
+			}
+		});
+		tableKarten.setFillsViewportHeight(true);
+		tableKarten.getTableHeader().setReorderingAllowed(false);
+		tableKarten.addMouseListener(new MouseAdapter()
+		{
+			public void mousePressed(MouseEvent mouseEvent) {
+				JTable table = (JTable) mouseEvent.getSource();
+				Point point = mouseEvent.getPoint();
+				int row = table.rowAtPoint(point);
+				if (mouseEvent.getClickCount() == 2) {
+					if (row != -1) {
+						AendernKarte ak = new AendernKarte(ownerFrame, kartenNummern[row]);
+						if(ak.isSaved()){ 
+							updateView();
+						}
+						ak.dispose();
+					}
+				}
+			}
+		});
+		
+		scrollKarten.setViewportView(tableKarten);
 	}
 	
 	public boolean isSaved(){

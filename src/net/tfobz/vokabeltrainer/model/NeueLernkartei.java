@@ -154,6 +154,8 @@ public class NeueLernkartei extends JDialog {
 				contentPanel.add(grossKleinBox);
 			}
 		}
+		
+		setVisible(true);
 	}
 	
 	public boolean isSaved(){

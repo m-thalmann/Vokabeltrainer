@@ -84,6 +84,8 @@ public class NeuesFach extends JDialog
 		if(VokabeltrainerDB.getLernkartei(numLernkartei) == null){
 			JOptionPane.showMessageDialog(NeuesFach.this, "Diese Lernkartei existiert nicht!", "Achtung", JOptionPane.WARNING_MESSAGE);
 			setVisible(false);
+		}else{
+			setVisible(true);
 		}
 	}
 	
