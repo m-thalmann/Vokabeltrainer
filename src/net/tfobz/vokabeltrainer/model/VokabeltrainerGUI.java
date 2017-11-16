@@ -24,11 +24,13 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.JCheckBox;
 
 public class VokabeltrainerGUI extends JFrame {
 
 	private JPanel contentPane = null;
 	private JTable faecherListe= null;
+	private JCheckBox chckbxNurFlligeFcher = null;
 	private int num = 0;
 	private JLabel pos = null;
 	private JLabel vokabeltitel = null;
@@ -89,6 +91,12 @@ public class VokabeltrainerGUI extends JFrame {
 		vokabeltitel.setBounds(10, 11, 555, 30);
 		contentPane.add(vokabeltitel);
 
+		chckbxNurFlligeFcher = new JCheckBox("Nur f\u00E4llige F\u00E4cher");
+		chckbxNurFlligeFcher.setHorizontalAlignment(SwingConstants.RIGHT);
+		chckbxNurFlligeFcher.setHorizontalTextPosition(SwingConstants.LEFT);
+		chckbxNurFlligeFcher.setBounds(324, 43, 153, 25);
+		contentPane.add(chckbxNurFlligeFcher);
+		
 		JButton start = new JButton("Start");
 		start.setBounds(485, 44, 89, 23);
 		start.setFocusPainted(false);
@@ -96,29 +104,43 @@ public class VokabeltrainerGUI extends JFrame {
 		{
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				 int nummerFachStart = -1;
-	                if(faecherListe.getSelectedRow() != -1){
-	                    switch(JOptionPane.showConfirmDialog(VokabeltrainerGUI.this, "Nur ab ausgewähltem Fach lernen?", "Frage", JOptionPane.YES_NO_CANCEL_OPTION)){
-	                        case JOptionPane.NO_OPTION:{
-	                            nummerFachStart = 0;
-	                            break;
-	                        }
-	                        case JOptionPane.YES_OPTION:{
-	                            nummerFachStart = faecherListe.getSelectedRow();
-	                            break;
-	                        }
-	                    }
-	                }else{
-	                    nummerFachStart = 0;
-	                }
-	                
-	                if(nummerFachStart >= 0){
-	                    LernenGUI lg = new LernenGUI(VokabeltrainerGUI.this, l.getNummer(), nummerFachStart);
-	                    if(lg.hasChanges()){
-	                        updateView();
-	                    }
-	                    lg.dispose();
-	                }
+				int[] nummernFaecher = null;
+				
+	      if(!chckbxNurFlligeFcher.isSelected()){
+	      	int nummerFachStart = -1;
+	      	
+	      	if(faecherListe.getSelectedRow() != -1){
+		        switch(JOptionPane.showConfirmDialog(VokabeltrainerGUI.this, "Nur ab ausgewähltem Fach lernen?", "Frage", JOptionPane.YES_NO_CANCEL_OPTION)){
+		            case JOptionPane.NO_OPTION:{
+		                nummerFachStart = 0;
+		                break;
+		            }
+		            case JOptionPane.YES_OPTION:{
+		                nummerFachStart = faecherListe.getSelectedRow();
+		                break;
+		            }
+		        }
+		      }else{
+	          nummerFachStart = 0;
+		      }
+	      	
+	      	nummernFaecher = new int[VokabeltrainerDB.getFaecher(l.getNummer()).size() - nummerFachStart];
+	      }else{
+	      	List<Fach> abgelaufene = VokabeltrainerDB.getFaecherErinnerung(l.getNummer());
+	      	nummernFaecher = new int[abgelaufene.size()];
+
+	      	for(int i = 0; i < abgelaufene.size(); i++){
+	      		nummernFaecher[i] = abgelaufene.get(i).getNummer();
+	      	}
+	      }
+	      
+	      if(nummernFaecher != null){
+          LernenGUI lg = new LernenGUI(VokabeltrainerGUI.this, l.getNummer(), nummernFaecher);
+          if(lg.hasChanges()){
+              updateView();
+          }
+          lg.dispose();
+	      }
 			}
 		});
 		contentPane.add(start);
@@ -251,7 +273,7 @@ public class VokabeltrainerGUI extends JFrame {
 		contentPane.add(pos);
 		
 		JButton btnNeuesFach = new JButton("Neues Fach");
-		btnNeuesFach.setBounds(373, 44, 100, 23);
+		btnNeuesFach.setBounds(149, 12, 100, 23);
 		btnNeuesFach.setFocusPainted(false);
 		btnNeuesFach.addActionListener(new ActionListener()
 		{
@@ -267,7 +289,7 @@ public class VokabeltrainerGUI extends JFrame {
 		contentPane.add(btnNeuesFach);
 		
 		JButton btnWrterAnzeigen = new JButton("Karten anzeigen");
-		btnWrterAnzeigen.setBounds(234, 43, 127, 25);
+		btnWrterAnzeigen.setBounds(10, 11, 127, 25);
 		btnWrterAnzeigen.setFocusPainted(false);
 		btnWrterAnzeigen.addActionListener(new ActionListener()
 		{

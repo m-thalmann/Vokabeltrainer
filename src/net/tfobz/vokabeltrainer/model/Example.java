@@ -52,7 +52,7 @@ public class Example extends JFrame {
 				contentPane.add(n1);
 				contentPane.add(n2);
 				
-				Un
+				//Un
 				
 				
 			}

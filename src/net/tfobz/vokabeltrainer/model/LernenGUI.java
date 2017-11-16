@@ -12,13 +12,12 @@ public class LernenGUI extends JDialog
 {
 	private JFrame ownerFrame = null;
 	private int lnummer = 0;
-	private int fnummerStart = 0;
-	private boolean zufaellige = false;
+	private int[] numFaecher = null;
 	private JTextField textField;
 	private JTextField textField_1;
 	private boolean changed = false;
 	
-	public LernenGUI(JFrame owner, int nummerLernkartei, int nummerFachStart){
+	public LernenGUI(JFrame owner, int nummerLernkartei, int[] nummernFaecher){
 		super(owner, "Vokabeltrainer: Lernen");
 		getContentPane().setLayout(null);
 		setSize(381, 222);
@@ -29,7 +28,7 @@ public class LernenGUI extends JDialog
 		
 		this.ownerFrame = owner;
 		this.lnummer = nummerLernkartei;
-		this.fnummerStart = nummerFachStart;
+		this.numFaecher = nummernFaecher;
 		
 		JLabel lblLernen = new JLabel("Lernen");
 		lblLernen.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -56,7 +55,7 @@ public class LernenGUI extends JDialog
 		
 		setVisible(true);
 		
-		JOptionPane.showInputDialog(ownerFrame, "Test", "", messageType, icon, selectionValues, initialSelectionValue)
+		
 	}
 
 	public boolean hasChanges() {
