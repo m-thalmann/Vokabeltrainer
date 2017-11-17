@@ -258,11 +258,12 @@ public class VokabeltrainerGUI extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				NeueLernkartei nl = new NeueLernkartei(VokabeltrainerGUI.this);
-				if(nl.isSaved()){
-					setNum(VokabeltrainerDB.getLernkarteien().size() - 1);
-				}
-				nl.dispose();
+//				NeueLernkartei nl = new NeueLernkartei(VokabeltrainerGUI.this);
+//				if(nl.isSaved()){
+//					setNum(VokabeltrainerDB.getLernkarteien().size() - 1);
+//				}
+//				nl.dispose();
+				NeuMenue nm = new NeuMenue(VokabeltrainerGUI.this, l.getNummer());
 			}
 		});
 		contentPane.add(neu);
