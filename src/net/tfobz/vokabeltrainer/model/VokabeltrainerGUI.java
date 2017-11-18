@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,7 +25,6 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.JCheckBox;
 
 public class VokabeltrainerGUI extends JFrame {
 
@@ -104,6 +104,7 @@ public class VokabeltrainerGUI extends JFrame {
 		{
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				//TODO nur fächer hinzufügen wo karten enthalten sind
 				int[] nummernFaecher = null;
 				
 	      if(!chckbxNurFlligeFcher.isSelected()){
@@ -119,12 +120,23 @@ public class VokabeltrainerGUI extends JFrame {
 		                nummerFachStart = faecherListe.getSelectedRow();
 		                break;
 		            }
+		            default:{
+		            	nummerFachStart = -1;
+		            }
 		        }
 		      }else{
 	          nummerFachStart = 0;
 		      }
 	      	
-	      	nummernFaecher = new int[VokabeltrainerDB.getFaecher(l.getNummer()).size() - nummerFachStart];
+	      	if(nummerFachStart >= 0){
+	      		List<Fach> faecher = VokabeltrainerDB.getFaecher(l.getNummer());
+	      		
+	      		nummernFaecher = new int[faecher.size() - nummerFachStart];
+	      		
+	      		for(int i = 0; i < faecher.size() - nummerFachStart; i++){
+	      			nummernFaecher[i] = faecher.get(i + nummerFachStart).getNummer();
+	      		}
+	      	}
 	      }else{
 	      	List<Fach> abgelaufene = VokabeltrainerDB.getFaecherErinnerung(l.getNummer());
 	      	nummernFaecher = new int[abgelaufene.size()];
@@ -135,11 +147,7 @@ public class VokabeltrainerGUI extends JFrame {
 	      }
 	      
 	      if(nummernFaecher != null){
-          LernenGUI lg = new LernenGUI(VokabeltrainerGUI.this, l.getNummer(), nummernFaecher);
-          if(lg.hasChanges()){
-              updateView();
-          }
-          lg.dispose();
+          new LernenGUI(VokabeltrainerGUI.this, l.getNummer(), nummernFaecher);
 	      }
 			}
 		});
@@ -258,12 +266,15 @@ public class VokabeltrainerGUI extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-//				NeueLernkartei nl = new NeueLernkartei(VokabeltrainerGUI.this);
-//				if(nl.isSaved()){
-//					setNum(VokabeltrainerDB.getLernkarteien().size() - 1);
-//				}
-//				nl.dispose();
 				NeuMenue nm = new NeuMenue(VokabeltrainerGUI.this, l.getNummer());
+				if(nm.isSaved()){
+					if(nm.getSaved() == NeuMenue.LERNKARTEI){
+						setNum(VokabeltrainerDB.getLernkarteien().size() - 1);
+					}else if(nm.getSaved() == NeuMenue.FACH){
+						updateView();
+					}
+				}
+				nm.dispose();
 			}
 		});
 		contentPane.add(neu);
@@ -272,22 +283,6 @@ public class VokabeltrainerGUI extends JFrame {
 		pos.setHorizontalAlignment(SwingConstants.LEFT);
 		pos.setBounds(79, 48, 57, 14);
 		contentPane.add(pos);
-		
-		JButton btnNeuesFach = new JButton("Neues Fach");
-		btnNeuesFach.setBounds(149, 12, 100, 23);
-		btnNeuesFach.setFocusPainted(false);
-		btnNeuesFach.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				NeuesFach nf = new NeuesFach(VokabeltrainerGUI.this, l.getNummer());
-				if(nf.isSaved()){
-					updateView();
-				}
-				nf.dispose();
-			}
-		});
-		contentPane.add(btnNeuesFach);
 		
 		JButton btnWrterAnzeigen = new JButton("Karten anzeigen");
 		btnWrterAnzeigen.setBounds(10, 11, 127, 25);
