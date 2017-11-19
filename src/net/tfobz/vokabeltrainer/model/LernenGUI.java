@@ -7,18 +7,20 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.JButton;
+import javax.swing.SwingConstants;
+import javax.swing.Timer;
 
 public class LernenGUI extends JDialog
 {
 	private static final int WRONG = -1;
 	private static final int NOTDONE = 0;
-	private static final int CORRECT = 1;
+	private final int TIMEOUT = 1000;
 	
 	private int lnummer = 0;
 	private int[] numFaecher = null;
@@ -26,13 +28,14 @@ public class LernenGUI extends JDialog
 	private ArrayList<Integer> numKarten = null;
 	private int numKarteCurrent = 0;
 	private ArrayList<Integer> kartenStatus = null;
+	private ArrayList<Integer> kartenDoneCorrect = new ArrayList<>();
 			
 	private JTextField textField;
 	private JTextField textField_1;
 	private JFrame ownerFrame = null;
 	private JButton btnWeiter = null;
-	
-	//TODO bei einer eingabe update zuletzt gelernt
+	private JButton btnBeenden = null;
+	private JLabel labelCorrect;
 	
 	public LernenGUI(JFrame owner, int nummerLernkartei, int[] nummernFaecher){
 		super(owner, "Vokabeltrainer: Lernen");
@@ -62,7 +65,6 @@ public class LernenGUI extends JDialog
 		
 		textField = new JTextField();
 		textField.setBounds(124, 49, 231, 22);
-		textField.setEnabled(!VokabeltrainerDB.getLernkartei(lnummer).getRichtung());
 		textField.addKeyListener(new KeyAdapter()
 		{
 
@@ -78,7 +80,6 @@ public class LernenGUI extends JDialog
 		
 		textField_1 = new JTextField();
 		textField_1.setBounds(124, 91, 231, 22);
-		textField_1.setEnabled(VokabeltrainerDB.getLernkartei(lnummer).getRichtung());
 		textField_1.addKeyListener(new KeyAdapter()
 		{
 
@@ -92,7 +93,7 @@ public class LernenGUI extends JDialog
 		});
 		getContentPane().add(textField_1);
 		
-		JButton btnBeenden = new JButton("Beenden");
+		btnBeenden = new JButton("Beenden");
 		btnBeenden.setBounds(10, 126, 97, 25);
 		btnBeenden.addActionListener(new ActionListener()
 		{
@@ -107,7 +108,69 @@ public class LernenGUI extends JDialog
 		btnWeiter = new JButton("Weiter");
 		btnWeiter.setBounds(258, 126, 97, 25);
 		btnWeiter.setFocusPainted(false);
+		btnWeiter.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(VokabeltrainerDB.getKarte(numKarten.get(numKarteCurrent)).getRichtig((textField.isEnabled()) ? textField.getText() : textField_1.getText())){
+					if(kartenStatus.get(numKarteCurrent) == LernenGUI.NOTDONE){
+						VokabeltrainerDB.setKarteRichtig(VokabeltrainerDB.getKarte(numKarten.get(numKarteCurrent)));
+					}
+					kartenStatus.remove(numKarteCurrent);
+					numKarten.remove(numKarteCurrent);
+					numKarteCurrent--;
+					
+					labelCorrect.setText("Richtig");
+					textField.setEnabled(false);
+					textField_1.setEnabled(false);
+					btnBeenden.setEnabled(false);
+					btnWeiter.setEnabled(false);
+					
+					Timer t = new Timer(TIMEOUT, new ActionListener()
+					{
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							labelCorrect.setText("");
+							updateView();
+							btnBeenden.setEnabled(true);
+							btnWeiter.setEnabled(true);
+						}
+					});
+					t.setRepeats(false);
+					t.start();
+				}else{
+					if(kartenStatus.get(numKarteCurrent) == LernenGUI.NOTDONE){
+						VokabeltrainerDB.setKarteFalsch(VokabeltrainerDB.getKarte(numKarten.get(numKarteCurrent)));
+					}
+					kartenStatus.set(numKarteCurrent, LernenGUI.WRONG);
+					
+					labelCorrect.setText("Falsch");
+					textField.setEnabled(false);
+					textField_1.setEnabled(false);
+					btnBeenden.setEnabled(false);
+					btnWeiter.setEnabled(false);
+					
+					Timer t = new Timer(TIMEOUT, new ActionListener()
+					{
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							labelCorrect.setText("");
+							updateView();
+							btnBeenden.setEnabled(true);
+							btnWeiter.setEnabled(true);
+						}
+					});
+					t.setRepeats(false);
+					t.start();
+				}
+			}
+		});
 		getContentPane().add(btnWeiter);
+		
+		labelCorrect = new JLabel("");
+		labelCorrect.setHorizontalAlignment(SwingConstants.CENTER);
+		labelCorrect.setBounds(124, 130, 122, 16);
+		getContentPane().add(labelCorrect);
 		
 		updateView();
 		
@@ -115,9 +178,17 @@ public class LernenGUI extends JDialog
 	}
 
 	private void updateView() {
+		textField.setEnabled(!VokabeltrainerDB.getLernkartei(lnummer).getRichtung());
+		textField_1.setEnabled(VokabeltrainerDB.getLernkartei(lnummer).getRichtung());
+		
+		if(textField.isEnabled()){
+			textField.requestFocus();
+		}else{
+			textField_1.requestFocus();
+		}
+		
 		if(this.numKarten == null){
 			if(this.numFachCurrent +1 == this.numFaecher.length){
-				//TODO bei auswahl von zweiten direkt diese ausgabe? -> weil noch keine karten in den fächern
 				JOptionPane.showMessageDialog(ownerFrame, "Sie haben das Training abgeschlossen!", "Ende", JOptionPane.INFORMATION_MESSAGE);
 				setVisible(false);
 				return;
@@ -127,7 +198,6 @@ public class LernenGUI extends JDialog
 			this.kartenStatus = null;
 			
 			this.numFachCurrent++;
-			System.out.println(this.numFaecher[this.numFachCurrent] + " " + VokabeltrainerDB.getKarten(this.numFaecher[this.numFachCurrent]));
 			int length = VokabeltrainerDB.getKarten(this.numFaecher[this.numFachCurrent]).size();
 			
 			this.numKarten = new ArrayList<>();
@@ -138,7 +208,7 @@ public class LernenGUI extends JDialog
 				int num = -1;
 				do{
 					num = VokabeltrainerDB.getZufaelligeKarte(this.lnummer, this.numFaecher[numFachCurrent]).getNummer();
-				}while(numKarten.contains(num));
+				}while(numKarten.contains(num) || kartenDoneCorrect.contains(num));
 				
 				this.numKarten.add(num);
 				this.kartenStatus.add(LernenGUI.NOTDONE);
@@ -155,7 +225,13 @@ public class LernenGUI extends JDialog
 					this.numKarteCurrent++;
 				}
 				
-				
+				if(!textField.isEnabled()){
+					textField.setText(VokabeltrainerDB.getKarte(this.numKarten.get(numKarteCurrent)).getWortEins());
+					textField_1.setText("");
+				}else{
+					textField.setText("");
+					textField_1.setText(VokabeltrainerDB.getKarte(this.numKarten.get(numKarteCurrent)).getWortZwei());
+				}
 			}
 		}
 	}

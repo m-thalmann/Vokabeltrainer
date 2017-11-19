@@ -104,7 +104,6 @@ public class VokabeltrainerGUI extends JFrame {
 		{
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO nur fächer hinzufügen wo karten enthalten sind
 				int[] nummernFaecher = null;
 				
 	      if(!chckbxNurFlligeFcher.isSelected()){
@@ -131,28 +130,58 @@ public class VokabeltrainerGUI extends JFrame {
 	      	if(nummerFachStart >= 0){
 	      		List<Fach> faecher = VokabeltrainerDB.getFaecher(l.getNummer());
 	      		
-	      		nummernFaecher = new int[faecher.size() - nummerFachStart];
-	      		
+	      		int n = 0;
 	      		for(int i = 0; i < faecher.size() - nummerFachStart; i++){
-	      			nummernFaecher[i] = faecher.get(i + nummerFachStart).getNummer();
+	      			if(VokabeltrainerDB.getKarten(faecher.get(i + nummerFachStart).getNummer()).size() > 0)
+	      				n++;
+	      		}
+	      		
+	      		if(n == 0){
+	      			JOptionPane.showMessageDialog(VokabeltrainerGUI.this, "Diese Fächer enthalten keine Karten!", "Achtung", JOptionPane.WARNING_MESSAGE);
+	      		}else{
+	      			nummernFaecher = new int[n];
+		      		
+		      		int j = 0;
+		      		for(int i = 0; i < faecher.size() - nummerFachStart; i++){
+		      			if(VokabeltrainerDB.getKarten(faecher.get(i + nummerFachStart).getNummer()).size() > 0){
+		      				nummernFaecher[j] = faecher.get(i + nummerFachStart).getNummer();
+		      				j++;
+		      			}
+		      		}
 	      		}
 	      	}
 	      }else{
 	      	List<Fach> abgelaufene = VokabeltrainerDB.getFaecherErinnerung(l.getNummer());
-	      	nummernFaecher = new int[abgelaufene.size()];
-
+	      	
+	      	int n = 0;
 	      	for(int i = 0; i < abgelaufene.size(); i++){
-	      		nummernFaecher[i] = abgelaufene.get(i).getNummer();
+	      		if(VokabeltrainerDB.getKarten(abgelaufene.get(i).getNummer()).size() > 0)
+	      			n++;
 	      	}
+	      	
+	      	if(n == 0){
+      			JOptionPane.showMessageDialog(VokabeltrainerGUI.this, "Diese Fächer enthalten keine Karten!", "Achtung", JOptionPane.WARNING_MESSAGE);
+      		}else{
+      			nummernFaecher = new int[n];
+  	      	
+  	      	int j = 0;
+  	      	for(int i = 0; i < abgelaufene.size(); i++){
+  	      		if(VokabeltrainerDB.getKarten(abgelaufene.get(i).getNummer()).size() > 0){
+  	      			nummernFaecher[j] = abgelaufene.get(i).getNummer();
+  		      		j++;
+  	      		}
+  	      	}
+      		}
 	      }
 	      
 	      if(nummernFaecher != null){
           new LernenGUI(VokabeltrainerGUI.this, l.getNummer(), nummernFaecher);
+          updateView();
 	      }
 			}
 		});
 		contentPane.add(start);
-
+		
 		JLabel lernkartei = new JLabel("Lernkartei:");
 		lernkartei.setBounds(10, 44, 65, 23);
 		contentPane.add(lernkartei);
