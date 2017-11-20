@@ -1427,15 +1427,17 @@ public class VokabeltrainerDB
   						"    faecher.lnummer = " + nummerLernkartei +
   						"  ORDER BY faecher.fnummer;";
   				rs = stmt.executeQuery(sql);
+  				//New Line
+  				String nl = System.getProperty("line.separator");
   				while (rs.next()) {
   					String zeile = null;
   					if (mitFaechern)
   						zeile = rs.getString("kworteins") + "; " +
   								rs.getString("kwortzwei") + "; " +
-  								rs.getInt("fnummer") + "\n";
+  								rs.getInt("fnummer") + nl;
   					else
   						zeile = rs.getString("kworteins") + "; " +
-  								rs.getString("kwortzwei") + "; " + "\n";
+  								rs.getString("kwortzwei") + "; " + nl;
   					writer.write(zeile);
   				}
   				ret = 0;

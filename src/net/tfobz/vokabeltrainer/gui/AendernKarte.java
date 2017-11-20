@@ -3,6 +3,8 @@ package net.tfobz.vokabeltrainer.gui;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -20,6 +22,7 @@ public class AendernKarte extends JDialog
 	private int lnummer = 0;
 	private boolean saved = false;
 	private JFrame ownerFrame = null;
+	private JButton ok = null;
 
 	public AendernKarte(JFrame owner, int nummerLernkartei, int nummerKarte) {
 		super(owner, "Vokabeltrainer: Karte bearbeiten");
@@ -35,7 +38,7 @@ public class AendernKarte extends JDialog
 		this.lnummer = nummerLernkartei;
 
 		JLabel titel, first, second;
-		JButton ok, cancel;
+		JButton cancel;
 		final JTextField firstText;
 		final JTextField secondText;
 		
@@ -56,10 +59,30 @@ public class AendernKarte extends JDialog
 		firstText = new JTextField();
 		firstText.setBounds(120, 44, 258, 20);
 		firstText.setText(VokabeltrainerDB.getKarte(num).getWortEins());
+		firstText.addKeyListener(new KeyAdapter()
+		{
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER){
+					ok.doClick();
+				}
+			}
+		});
 
 		secondText = new JTextField();
 		secondText.setBounds(120, 84, 258, 20);
 		secondText.setText(VokabeltrainerDB.getKarte(num).getWortZwei());
+		secondText.addKeyListener(new KeyAdapter()
+		{
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER){
+					ok.doClick();
+				}
+			}
+		});
 
 		VokabeltrainerDB.getKarte(num).setWortEins(firstText.getText());
 		VokabeltrainerDB.getKarte(num).setWortZwei(secondText.getText());
