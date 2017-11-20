@@ -3,6 +3,7 @@ package net.tfobz.vokabeltrainer.gui;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -40,6 +41,7 @@ public class NeuMenue extends JDialog {
 		JButton n1 = new JButton("Lernkartei");
 		n1.setBounds(22, 49, 183, 25);
 		n1.setFocusPainted(false);
+		n1.setMnemonic(KeyEvent.VK_L);
 		n1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				NeueLernkartei nl = new NeueLernkartei(ownerFrame);
@@ -56,6 +58,7 @@ public class NeuMenue extends JDialog {
 		JButton n2 = new JButton("Fach");
 		n2.setBounds(22, 87, 183, 25);
 		n2.setFocusPainted(false);
+		n2.setMnemonic(KeyEvent.VK_F);
 		n2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				NeuesFach nf = new NeuesFach(ownerFrame, lnummer);

@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -93,6 +94,7 @@ public class ViewFach extends JDialog
 		//Speichern
 		JButton btnNewButton = new JButton("Speichern");
 		btnNewButton.setBounds(393, 428, 89, 24);
+		btnNewButton.setMnemonic(KeyEvent.VK_S);
 		btnNewButton.addActionListener(new ActionListener()
 		{
 			@Override
@@ -127,6 +129,7 @@ public class ViewFach extends JDialog
 		//Abbrechen
 		JButton btnNewButton_1 = new JButton("Abbrechen");
 		btnNewButton_1.setBounds(288, 428, 93, 24);
+		btnNewButton_1.setMnemonic(KeyEvent.VK_A);
 		btnNewButton_1.addActionListener(new ActionListener()
 		{
 			@Override
@@ -142,6 +145,7 @@ public class ViewFach extends JDialog
 		btnKarteBearbeiten = new JButton("Karte bearbeiten");
 		btnKarteBearbeiten.setBounds(10, 428, 136, 25);
 		btnKarteBearbeiten.setFocusPainted(false);
+		btnKarteBearbeiten.setMnemonic(KeyEvent.VK_B);
 		btnKarteBearbeiten.addActionListener(new ActionListener()
 		{
 			@Override

@@ -196,7 +196,7 @@ public class VokabeltrainerDB
 
 	/**
 	 * Holt die Lernkartei welche die übergebene Nummer hat aus der Datenbank
-	 * @param nummer
+	 * @param nummerLernkartei
 	 * @return null falls Lernkartei nicht gefunden werden kann
 	 */
 	public static Lernkartei getLernkartei(int nummerLernkartei) {
@@ -958,7 +958,6 @@ public class VokabeltrainerDB
 	/**
    * Ändert von einer bestehenden Karte die Wörter. Andere Eigenschaften der
 	 * Karte können nicht geändert werden. Die Karte verbleibt in demselben Fach
-	 * @param nummerLernkartei
 	 * @param karte
 	 * @return -1 falls Karte nicht in Datenbank ist oder Datenbankfehler aufgetreten ist<br>
 	 * -2 falls Karte nicht vollständig ist<br>
@@ -1065,7 +1064,7 @@ public class VokabeltrainerDB
 	/**
 	 * Löscht aus übergebenen Lernkartei alle Fächer und somit
 	 * alle Karten die den Fächern zugeordnet sind
-	 * @param nummerLernkatei
+	 * @param nummerLernkartei
 	 * @return -1 falls Datenbankfehler aufgetreten ist oder Lernkartei nicht
 	 * gefunden wurde
 	 */
@@ -1256,7 +1255,7 @@ public class VokabeltrainerDB
 	 * Schornstein; chimney; 1<br>
 	 * Hier gibt die dritte Spalte die Zugehörigkeit zu den Fächern wieder, welche
 	 * ebenfalls neu angelegt werden. Doppelt vorhandene Karten werden nicht importiert
-	 * @nummerLernkartei
+	 * @param nummerLernkartei
 	 * @param pfad
 	 * @return -1 falls Importierfehler aufgetreten ist<br>
 	 * -2 falls Datei nicht gefunden wurde<br>

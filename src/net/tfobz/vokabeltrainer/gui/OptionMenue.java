@@ -3,6 +3,7 @@ package net.tfobz.vokabeltrainer.gui;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.io.File;
 
 import javax.swing.JButton;
@@ -64,6 +65,7 @@ public class OptionMenue extends JDialog
 		JButton importierenKnopf = new JButton("Importieren");
 		importierenKnopf.setBounds(22, 123, 110, 23);
 		importierenKnopf.setFocusPainted(false);
+		importierenKnopf.setMnemonic(KeyEvent.VK_I);
 		importierenKnopf.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -76,6 +78,7 @@ public class OptionMenue extends JDialog
 		JButton aenderKnopf = new JButton("\u00C4ndern");
 		aenderKnopf.setBounds(22, 51, 110, 23);
 		aenderKnopf.setFocusPainted(false);
+		aenderKnopf.setMnemonic(KeyEvent.VK_N);
 		aenderKnopf.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -96,6 +99,7 @@ public class OptionMenue extends JDialog
 		JButton loeschenKnopf = new JButton("L\u00F6schen");
 		loeschenKnopf.setBounds(22, 87, 110, 23);
 		loeschenKnopf.setFocusPainted(false);
+		loeschenKnopf.setMnemonic(KeyEvent.VK_L);
 		loeschenKnopf.addActionListener(new ActionListener() {
 
 			@Override
@@ -133,6 +137,7 @@ public class OptionMenue extends JDialog
 		JButton exportierenKnopf = new JButton("Exportieren");
 		exportierenKnopf.setBounds(22, 159, 110, 23);
 		exportierenKnopf.setFocusPainted(false);
+		exportierenKnopf.setMnemonic(KeyEvent.VK_E);
 		exportierenKnopf.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

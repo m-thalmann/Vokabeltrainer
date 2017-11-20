@@ -102,6 +102,7 @@ public class LernenGUI extends JDialog {
 
 		btnBeenden = new JButton("Beenden");
 		btnBeenden.setBounds(10, 126, 97, 25);
+		btnBeenden.setMnemonic(KeyEvent.VK_B);
 		btnBeenden.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -115,6 +116,7 @@ public class LernenGUI extends JDialog {
 		btnWeiter = new JButton("Weiter");
 		btnWeiter.setBounds(258, 126, 97, 25);
 		btnWeiter.setFocusPainted(false);
+		btnWeiter.setMnemonic(KeyEvent.VK_W);
 		btnWeiter.addActionListener(new ActionListener() {
 			// Geht zur nächsten Karte, wenn diese richtig ausgefüllt wurde
 			public void actionPerformed(ActionEvent e) {

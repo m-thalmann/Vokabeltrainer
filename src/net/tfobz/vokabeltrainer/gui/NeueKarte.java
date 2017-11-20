@@ -3,6 +3,7 @@ package net.tfobz.vokabeltrainer.gui;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -47,7 +48,15 @@ public class NeueKarte extends JDialog
 		titel.setBounds(10, 11, 200, 25);
 		this.getContentPane().add(titel);
 		
-		//Setzt die Wörter, welche geändert werden können
+		erstesWort = new JTextField();
+		erstesWort.setBounds(120, 44, 258, 20);
+
+		zweitesWort = new JTextField();
+		zweitesWort.setBounds(120, 84, 258, 20);
+
+		this.getContentPane().add(erstesWort);
+		this.getContentPane().add(zweitesWort);
+		
 		erstes = new JLabel(VokabeltrainerDB.getLernkartei(lnummer)
 				.getWortEinsBeschreibung() + ": ");
 		erstes.setBounds(10, 44, 100, 20);
@@ -59,17 +68,9 @@ public class NeueKarte extends JDialog
 		this.getContentPane().add(erstes);
 		this.getContentPane().add(zweites);
 
-		erstesWort = new JTextField();
-		erstesWort.setBounds(120, 44, 258, 20);
-
-		zweitesWort = new JTextField();
-		zweitesWort.setBounds(120, 84, 258, 20);
-
-		this.getContentPane().add(erstesWort);
-		this.getContentPane().add(zweitesWort);
-
 		speichern = new JButton("Speichern");
 		speichern.setBounds(278, 115, 100, 25);
+		speichern.setMnemonic(KeyEvent.VK_S);
 		speichern.addActionListener(new ActionListener()
 		{
 
@@ -103,6 +104,7 @@ public class NeueKarte extends JDialog
 
 		abbrechen = new JButton("Abbrechen");
 		abbrechen.setBounds(173, 115, 100, 25);
+		abbrechen.setMnemonic(KeyEvent.VK_A);
 		abbrechen.addActionListener(new ActionListener()
 		{
 

@@ -71,7 +71,7 @@ public class Karte
    * Liefert in Abhängigkeit der eingestellten Fragerichtung und in Abhängigkeit ob die Groß-/Kleinschreibung
    * berücksichtigt werden soll ob das eingegebene Wort dem gesuchten Wort entspricht
    * @param wort
-   * @return
+   * @return richtung
    */
   public boolean getRichtig(String wort) {
   	boolean ret = false;

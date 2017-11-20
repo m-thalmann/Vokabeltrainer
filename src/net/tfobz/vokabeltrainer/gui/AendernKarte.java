@@ -92,15 +92,13 @@ public class AendernKarte extends JDialog
 			}
 		});
 
-		VokabeltrainerDB.getKarte(num).setWortEins(firstText.getText());
-		VokabeltrainerDB.getKarte(num).setWortZwei(secondText.getText());
-
 		this.getContentPane().add(firstText);
 		this.getContentPane().add(secondText);
 		
 		JButton loeschen = new JButton("Löschen");
 		loeschen.setBounds(146, 116, 100, 23);
 		loeschen.setFocusPainted(false);
+		loeschen.setMnemonic(KeyEvent.VK_L);
 		loeschen.addActionListener(new ActionListener()
 		{
 
@@ -118,6 +116,7 @@ public class AendernKarte extends JDialog
 		ok = new JButton("Speichern");
 		ok.setBounds(278, 115, 100, 25);
 		ok.setFocusPainted(false);
+		ok.setMnemonic(KeyEvent.VK_S);
 		ok.addActionListener(new ActionListener()
 		{
 
@@ -158,6 +157,7 @@ public class AendernKarte extends JDialog
 		cancel = new JButton("Abbrechen");
 		cancel.setBounds(10, 115, 100, 25);
 		cancel.setFocusPainted(false);
+		cancel.setMnemonic(KeyEvent.VK_A);
 		cancel.addActionListener(new ActionListener()
 		{
 

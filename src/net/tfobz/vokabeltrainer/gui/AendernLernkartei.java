@@ -5,6 +5,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -65,6 +66,8 @@ public class AendernLernkartei extends JDialog {
 		{
 			JLabel lblBeschreibung = new JLabel("Beschreibung: ");
 			lblBeschreibung.setBounds(10, 60, 200, 20);
+			lblBeschreibung.setLabelFor(textField);
+			lblBeschreibung.setDisplayedMnemonic(KeyEvent.VK_B);
 			contentPanel.add(lblBeschreibung);
 		}
 		
@@ -93,6 +96,7 @@ public class AendernLernkartei extends JDialog {
 				JButton aenderButton = new JButton("Ändern");
 				aenderButton.setActionCommand("Ändern");
 				aenderButton.setFocusPainted(false);
+				aenderButton.setMnemonic(KeyEvent.VK_N);
 				aenderButton.addActionListener(new ActionListener()
 				{
 					@Override
@@ -124,6 +128,8 @@ public class AendernLernkartei extends JDialog {
 			JLabel lblBeschreibungErstesWort = new JLabel("Beschreibung erstes Wort");
 			lblBeschreibungErstesWort.setBounds(14, 26, 181, 16);
 			lblBeschreibungErstesWort.setHorizontalAlignment(SwingConstants.LEFT);
+			lblBeschreibungErstesWort.setLabelFor(textField_1);
+			lblBeschreibungErstesWort.setDisplayedMnemonic(KeyEvent.VK_E);
 			field.add(lblBeschreibungErstesWort);
 			
 			textField_1 = new JTextField(VokabeltrainerDB.getLernkartei(num).getWortEinsBeschreibung());
@@ -133,6 +139,9 @@ public class AendernLernkartei extends JDialog {
 			
 			JLabel lblBeschreibungZweitesWort = new JLabel("Beschreibung zweites Wort");
 			lblBeschreibungZweitesWort.setBounds(14, 53, 181, 16);
+			lblBeschreibungZweitesWort.setHorizontalAlignment(SwingConstants.LEFT);
+			lblBeschreibungZweitesWort.setLabelFor(textField_2);
+			lblBeschreibungZweitesWort.setDisplayedMnemonic(KeyEvent.VK_Z);
 			field.add(lblBeschreibungZweitesWort);
 			
 			textField_2 = new JTextField(VokabeltrainerDB.getLernkartei(num).getWortZweiBeschreibung());
@@ -165,6 +174,7 @@ public class AendernLernkartei extends JDialog {
 				grossKleinBox.setBounds(259, 238, 165, 23);
 				grossKleinBox.setSelected(VokabeltrainerDB.getLernkartei(num).getGrossKleinschreibung());
 				grossKleinBox.setEnabled(false);
+				grossKleinBox.setMnemonic(KeyEvent.VK_O);
 				contentPanel.add(grossKleinBox);
 			}
 		}

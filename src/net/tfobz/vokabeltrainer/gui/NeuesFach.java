@@ -3,6 +3,7 @@ package net.tfobz.vokabeltrainer.gui;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -47,6 +48,8 @@ public class NeuesFach extends JDialog
 		
 		JLabel label = new JLabel("Beschreibung: ");
 		label.setBounds(10, 60, 200, 20);
+		label.setLabelFor(textField);
+		label.setDisplayedMnemonic(KeyEvent.VK_B);
 		getContentPane().add(label);
 		
 		textField = new JTextField();
@@ -56,6 +59,8 @@ public class NeuesFach extends JDialog
 		
 		JLabel lblErinnerungsintervalltage = new JLabel("Erinnerungsintervall (Tage):");
 		lblErinnerungsintervalltage.setBounds(10, 119, 200, 16);
+		lblErinnerungsintervalltage.setLabelFor(spinner);
+		lblErinnerungsintervalltage.setDisplayedMnemonic(KeyEvent.VK_E);
 		getContentPane().add(lblErinnerungsintervalltage);
 		
 		spinner = new JSpinner();
@@ -64,6 +69,7 @@ public class NeuesFach extends JDialog
 		
 		JButton btnSpeichern = new JButton("Speichern");
 		btnSpeichern.setBounds(327, 169, 97, 25);
+		btnSpeichern.setMnemonic(KeyEvent.VK_S);
 		btnSpeichern.addActionListener(new ActionListener()
 		{
 			@Override
@@ -81,6 +87,7 @@ public class NeuesFach extends JDialog
 		
 		JButton btnAbbrechen = new JButton("Abbrechen");
 		btnAbbrechen.setBounds(222, 169, 97, 25);
+		btnAbbrechen.setMnemonic(KeyEvent.VK_A);
 		btnAbbrechen.addActionListener(new ActionListener()
 		{
 			@Override

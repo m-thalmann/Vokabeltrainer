@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -30,12 +31,11 @@ import net.tfobz.vokabeltrainer.model.Lernkartei;
 import net.tfobz.vokabeltrainer.model.VokabeltrainerDB;
 
 /**
- *
- * @author Matthias Thalmann & Lukas Niederstätter
- * @version 1.0
- *
  * Dieses Programm implementiert einen Vokabeltrainer nach folgendem Prinzip:
  * @see <a href="https://de.wikipedia.org/wiki/Lernkartei">https://de.wikipedia.org/wiki/Lernkartei</a>
+ *
+ * @author Matthias Thalmann & Lukas Niederstätter
+ * @version 1.0 <br/>
  *
  */
 
@@ -89,7 +89,6 @@ public class VokabeltrainerGUI extends JFrame {
 			JOptionPane.showMessageDialog(this, "Sie besitzen noch keine Lernkartei. Sie müssen eine Anlegen um fortfahren zu können.", "Willkommen", JOptionPane.INFORMATION_MESSAGE);
 			
 			NeueLernkartei nl = new NeueLernkartei(this);
-			nl.setVisible(true);
 			
 			if(!nl.isSaved()){
 				System.exit(0);
@@ -110,12 +109,15 @@ public class VokabeltrainerGUI extends JFrame {
 		chckbxNurFlligeFcher.setHorizontalAlignment(SwingConstants.RIGHT);
 		chckbxNurFlligeFcher.setHorizontalTextPosition(SwingConstants.LEFT);
 		chckbxNurFlligeFcher.setBounds(324, 43, 153, 25);
+		chckbxNurFlligeFcher.setMnemonic(KeyEvent.VK_F);
 		contentPane.add(chckbxNurFlligeFcher);
 		
 		//Training starten
 		JButton start = new JButton("Start");
 		start.setBounds(485, 44, 89, 23);
 		start.setFocusPainted(false);
+		start.setToolTipText("Das Training starten");
+		start.setMnemonic(KeyEvent.VK_S);
 		start.addActionListener(new ActionListener()
 		{
 			@Override
@@ -206,6 +208,8 @@ public class VokabeltrainerGUI extends JFrame {
 		JButton optionen = new JButton("Optionen");
 		optionen.setBounds(10, 378, 100, 23);
 		optionen.setFocusPainted(false);
+		optionen.setToolTipText("Einstellungen für die Lernkartei");
+		optionen.setMnemonic(KeyEvent.VK_O);
 		optionen.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -237,6 +241,7 @@ public class VokabeltrainerGUI extends JFrame {
 		JButton vor = new JButton(">");
 		vor.setBounds(533, 378, 41, 23);
 		vor.setFocusPainted(false);
+		vor.setToolTipText("Navigation: Nach vorne");
 		vor.addActionListener(new ActionListener()
 		{
 			
@@ -255,6 +260,7 @@ public class VokabeltrainerGUI extends JFrame {
 		JButton zurueck = new JButton("<");
 		zurueck.setBounds(485, 378, 41, 23);
 		zurueck.setFocusPainted(false);
+		zurueck.setToolTipText("Navigation: Nach hinten");
 		zurueck.addActionListener(new ActionListener()
 		{
 			
@@ -277,6 +283,8 @@ public class VokabeltrainerGUI extends JFrame {
 		JButton neu = new JButton("Neu");
 		neu.setBounds(407, 378, 65, 23);
 		neu.setFocusPainted(false);
+		neu.setToolTipText("Neue Lernkartei hinzufügen");
+		neu.setMnemonic(KeyEvent.VK_N);
 		neu.addActionListener(new ActionListener() {
 
 			@Override
@@ -303,6 +311,8 @@ public class VokabeltrainerGUI extends JFrame {
 		JButton btnWrterAnzeigen = new JButton("Karten anzeigen");
 		btnWrterAnzeigen.setBounds(117, 378, 127, 23);
 		btnWrterAnzeigen.setFocusPainted(false);
+		btnWrterAnzeigen.setToolTipText("Karten anzeigen");
+		btnWrterAnzeigen.setMnemonic(KeyEvent.VK_K);
 		btnWrterAnzeigen.addActionListener(new ActionListener()
 		{
 			@Override
@@ -317,6 +327,8 @@ public class VokabeltrainerGUI extends JFrame {
 		btnAnzeigen = new JButton("Anzeigen");
 		btnAnzeigen.setBounds(256, 377, 97, 25);
 		btnAnzeigen.setFocusPainted(false);
+		btnAnzeigen.setToolTipText("Fach anzeigen");
+		btnAnzeigen.setMnemonic(KeyEvent.VK_A);
 		btnAnzeigen.addActionListener(new ActionListener()
 		{
 			@Override
