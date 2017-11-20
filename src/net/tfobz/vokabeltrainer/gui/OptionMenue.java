@@ -1,50 +1,70 @@
 package net.tfobz.vokabeltrainer.gui;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import net.tfobz.vokabeltrainer.model.Fach;
 import net.tfobz.vokabeltrainer.model.VokabeltrainerDB;
 
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-
-/*
- * TODO UpdateView für importData(), setNum für Löschen,
- * "l" bzw. "num" einfügen, exportieren-FKT, explizit
- * in Konstruktor nomol nochschaugn und Anordnung fa
- * Knöpfe mochn weil is folschr nit ausführn gekennt hon
+/**
+ *
+ * Diese Klasse stellt ein Menü dar,
+ * in welchem man:
+ * - Eine neue Lernkartei erstellen
+ * - Eine Lernkartei bearbeiten
+ * - Daten Importieren
+ * - Daten Exportieren
+ * 
+ * kann,
+ *
  */
 
 public class OptionMenue extends JDialog
 {
+	//Variablen, welche die Unterscheidung des Dialogausganges erleichtern
+	public static final int CHANGE = 0;
+	public static final int DELETE = 1;
+	public static final int IMPORT = 2;
+	public static final int EXPORT = 3;
+	
+	private int saved_num = -1;
+	private int lnummer = 0;
+	
+	private JFrame ownerFrame = null;
 
-	public OptionMenue(JFrame owner, int l) {
-		setTitle("Vokabeltrainer: Optionen");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 430, 250);
+	public OptionMenue(JFrame owner, int nummerLernkartei) {
+		setTitle("Optionen");
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setSize(163, 235);
 		setLocationRelativeTo(owner);
 		setModal(true);
 		getContentPane().setLayout(null);
+		setResizable(false);
 		
+		this.lnummer = nummerLernkartei;
+		this.ownerFrame = owner;
+		
+		JLabel lblOptionen = new JLabel("Optionen");
+		lblOptionen.setHorizontalAlignment(SwingConstants.CENTER);
+		lblOptionen.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblOptionen.setBounds(22, 13, 110, 25);
+		getContentPane().add(lblOptionen);
+		
+		//Importieren
 		JButton importierenKnopf = new JButton("Importieren");
-		importierenKnopf.setBounds(10, 178, 89, 23);
+		importierenKnopf.setBounds(22, 123, 110, 23);
+		importierenKnopf.setFocusPainted(false);
 		importierenKnopf.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				importData();
@@ -52,75 +72,109 @@ public class OptionMenue extends JDialog
 		});
 		getContentPane().add(importierenKnopf);
 		
+		//Lernkartei ändern
 		JButton aenderKnopf = new JButton("\u00C4ndern");
-		aenderKnopf.setBounds(216, 178, 89, 23);
+		aenderKnopf.setBounds(22, 51, 110, 23);
+		aenderKnopf.setFocusPainted(false);
 		aenderKnopf.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				AendernLernkartei aenderFenster = new AendernLernkartei(OptionMenue.this, l.getNummer());
+				AendernLernkartei aenderFenster = new AendernLernkartei(ownerFrame, lnummer);
 				if(aenderFenster.isSaved()){
-					updateView();
+					saved_num = OptionMenue.CHANGE;
 				}
 				aenderFenster.dispose();
+				
+				if(saved_num == OptionMenue.CHANGE){
+					setVisible(false);
+				}
 			}
 		});
 		getContentPane().add(aenderKnopf);
 		
+		//Lernkartei ändern
 		JButton loeschenKnopf = new JButton("L\u00F6schen");
-		loeschenKnopf.setBounds(315, 178, 89, 23);
+		loeschenKnopf.setBounds(22, 87, 110, 23);
+		loeschenKnopf.setFocusPainted(false);
 		loeschenKnopf.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int loeschenAnswer = JOptionPane.showConfirmDialog(VokabeltrainerGUI.this,
+				int loeschenAnswer = JOptionPane.showConfirmDialog(ownerFrame,
 						"Sie sind dabei diese Lernkartei samt ihren Fächern und Karten zu löschen. Wollen Sie diese Lernkartei wirklich löschen?",
 						"Achtung", JOptionPane.YES_NO_OPTION);
 				if (loeschenAnswer == JOptionPane.YES_OPTION) {
 					int anzL = VokabeltrainerDB.getLernkarteien().size();
 			
-					if(VokabeltrainerDB.loeschenLernkartei(l.getNummer()) == 0){
-						JOptionPane.showMessageDialog(VokabeltrainerGUI.this, "Die Lernkartei wurde erfolgreich gelöscht");
+					if(VokabeltrainerDB.loeschenLernkartei(lnummer) == 0){
+						JOptionPane.showMessageDialog(ownerFrame, "Die Lernkartei wurde erfolgreich gelöscht");
 						if(anzL == 1){
-							if(JOptionPane.showConfirmDialog(VokabeltrainerGUI.this, "Keine Lernkarteien mehr vorhanden! Wollen Sie eine Neue erstellen?", "Warnung", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
-								NeueLernkartei nl = new NeueLernkartei(VokabeltrainerGUI.this);
+							if(JOptionPane.showConfirmDialog(ownerFrame, "Keine Lernkarteien mehr vorhanden! Wollen Sie eine Neue erstellen?", "Warnung", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+								NeueLernkartei nl = new NeueLernkartei(ownerFrame);
 								nl.setVisible(true);
-								if(nl.isSaved()){
-									setNum(0);
-								} else {
+								if(!nl.isSaved()){
 									System.exit(0);
 								}
-								
 								nl.dispose();
 							}else{
 								System.exit(0);
 							}
 						}
-						VokabeltrainerGUI.setNum(0);
 					}
+					
+					saved_num = OptionMenue.DELETE;
+					setVisible(false);
 				}
 			}
 		});
 		getContentPane().add(loeschenKnopf);
 		
+		//Exportieren
 		JButton exportierenKnopf = new JButton("Exportieren");
-		exportierenKnopf.setBounds(109, 178, 89, 23);
+		exportierenKnopf.setBounds(22, 159, 110, 23);
+		exportierenKnopf.setFocusPainted(false);
 		exportierenKnopf.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				int mitFaecher = 0; // 0 Abbruch, 1 mit, -1 ohne
+				switch(JOptionPane.showConfirmDialog(ownerFrame, "Wollen Sie nur die Karten, ohne Fächer exportieren?", "Vokabeltrainer", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE)){
+					case JOptionPane.YES_OPTION:{
+						mitFaecher = -1;
+						break;
+					}
+					case JOptionPane.NO_OPTION:{
+						mitFaecher = 1;
+						break;
+					}
+				}
 				
+				if(mitFaecher == 1 || mitFaecher == -1){
+					String path = getExportierenPath();
+					
+					if(path != null){
+						if(VokabeltrainerDB.exportierenKarten(lnummer, path, mitFaecher == 1) == 0){
+							JOptionPane.showMessageDialog(ownerFrame, "Erfolgreich exportiert", "Information", JOptionPane.INFORMATION_MESSAGE);
+							saved_num = OptionMenue.EXPORT;
+							setVisible(false);
+							return;
+						}else{
+							JOptionPane.showMessageDialog(ownerFrame, "Fehler beim Exportieren!", "Fehler", JOptionPane.ERROR_MESSAGE);
+							return;
+						}
+					}
+				}
 			}
 		});
 		getContentPane().add(exportierenKnopf);
+		
+		setVisible(true);
 	}
 	
-	private void setNum1(int num){
-		if(this.num != num){
-			this.num = num;
-		}
-	}
-	
+	/**
+	 * Diese Methode öffnet einen JFileChooser, in welchem
+	 * man eine Textdatei (*.txt) auswählen kann, aus welcher
+	 * man Daten importieren kann
+	 */
 	private void importData() {
 		JFileChooser importFileChooser = new JFileChooser();
 
@@ -135,7 +189,7 @@ public class OptionMenue extends JDialog
 				File file = new File(path);
 				
 				if(!file.isDirectory() && file.isFile()){
-					switch(VokabeltrainerDB.importierenKarten(l.getNummer(), path)){
+					switch(VokabeltrainerDB.importierenKarten(lnummer, path)){
 						case -1:{
 							JOptionPane.showMessageDialog(this, "Importfehler ist aufgetreten!", "Fehler", JOptionPane.ERROR_MESSAGE);
 							break;
@@ -145,12 +199,14 @@ public class OptionMenue extends JDialog
 							break;
 						}
 						case -3:{
-							JOptionPane.showMessageDialog(this, "Importfehler ist aufgetreten! Die Lernkartei mit der Nummer " + String.valueOf(num + 1) + " existiert nicht", "Fehler", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(this, "Importfehler ist aufgetreten! Die Lernkartei mit der Nummer " + String.valueOf(lnummer) + " existiert nicht", "Fehler", JOptionPane.ERROR_MESSAGE);
 							break;
 						}
 						default:{
 							JOptionPane.showMessageDialog(this, "Daten wurden erfolgreich importiert!", "Ok", JOptionPane.INFORMATION_MESSAGE);
-							VokabeltrainerGUI.updateView();
+							this.saved_num = OptionMenue.IMPORT;
+							setVisible(false);
+							return;
 						}
 					}
 				}
@@ -163,33 +219,57 @@ public class OptionMenue extends JDialog
 		}
 	}
 	
-	private void updateView() {
-		l = VokabeltrainerDB.getLernkarteien().get(num);
-		this.vokabeltitel.setText(l.getBeschreibung());
-		this.pos.setText(String.valueOf(num + 1) + "/" + String.valueOf(VokabeltrainerDB.getLernkarteien().size()));
+	/**
+	 * Diese Methode öffnet einen JFileChooser, in welchem
+	 * man eine Textdatei (*.txt) auswählen kann, in welche man
+	 * exportieren will.
+	 * @return den Pfad zum Speicherort oder null, falls keine Datei
+	 *         gewählt wurde.
+	 */
+	private String getExportierenPath(){
+		JFileChooser fileChooser = new JFileChooser();
+		String path = null;
 		
-		List<Fach> faecher = VokabeltrainerDB.getFaecher(l.getNummer());
-		String[][] faecher_desc = new String[faecher.size()][4];
+		fileChooser.setMultiSelectionEnabled(false);
+		fileChooser.setFileFilter(new FileNameExtensionFilter("Textdateien", "txt"));
+		fileChooser.setAcceptAllFileFilterUsed(false);
 		
-		for(int i = 0; i < faecher.size(); i++){
-			if(faecher.get(i) != null){
-				String beschreibung = faecher.get(i).getBeschreibung();
-				faecher_desc[i][0] = (beschreibung != null) ? beschreibung : "(keine)";
+		if(fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
+			path = fileChooser.getSelectedFile().getAbsolutePath();
+			
+			if(!path.endsWith(".txt")){
+				path += ".txt";
+			}
+			
+			File file = new File(path);
+			
+			if(file.exists() && !file.isDirectory()){
+				int ow = JOptionPane.showConfirmDialog(this, "Diese Datei existiert bereits. Überschreiben?", "Achtung", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 				
-				String gelerntAm = faecher.get(i).getGelerntAmEuropaeischString();
-				faecher_desc[i][1] = (gelerntAm != null && gelerntAm != "NULL") ? gelerntAm : "Nie";
-				
-				faecher_desc[i][2] = String.valueOf(faecher.get(i).getErinnerungsIntervall());
-				
-				if(faecher.get(i).getErinnerungsIntervall() > 0){
-					if(faecher.get(i).getGelerntAm() != null){
-						faecher_desc[i][3] = (faecher.get(i).getErinnerungFaellig()) ? "Ja" : "Nein";
-					}else{
-						faecher_desc[i][3] = "Ja";
+				switch(ow){
+					case JOptionPane.YES_OPTION:{
+						file.delete();
+						break;
 					}
-				}else{
-					faecher_desc[i][3] = "Nie";
+					case JOptionPane.NO_OPTION:{
+						path = getExportierenPath();
+						break;
+					}
+					default:{
+						path = null;
+					}
 				}
 			}
 		}
+		
+		return path;
+	}
+	
+	public boolean isSaved(){
+		return this.saved_num != -1;
+	}
+	
+	public int getSavedNum(){
+		return this.saved_num;
+	}
 }
