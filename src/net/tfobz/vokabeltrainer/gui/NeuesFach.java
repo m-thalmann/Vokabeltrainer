@@ -14,6 +14,13 @@ import javax.swing.JButton;
 
 import net.tfobz.vokabeltrainer.model.*;
 
+/**
+ * Klasse, welche für das Erstellen des neuen
+ * Faches zuständig ist. Ein neuerstelltes
+ * Fach stellt alle Funktionen bereit, die
+ * dem Benutzer beim Lernen bereitgestellt werden
+ */
+
 public class NeuesFach extends JDialog
 {
 	private int lnummer = 0;

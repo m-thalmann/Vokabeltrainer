@@ -22,6 +22,14 @@ import javax.swing.border.EmptyBorder;
 
 import net.tfobz.vokabeltrainer.model.*;
 
+/**
+ * Klasse, welche eine neue Lernkartei
+ * anlegt. Der Benutzer kann dabei
+ * entscheiden, wie sie funktionieren
+ * soll, kann diese jedoch nicht direkt
+ * umändern
+ */
+
 public class NeueLernkartei extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();

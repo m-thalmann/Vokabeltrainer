@@ -22,6 +22,14 @@ import javax.swing.border.EmptyBorder;
 
 import net.tfobz.vokabeltrainer.model.*;
 
+/**
+ * Klasse, welche eine Lernkartei abändern kann.
+ * Der Benutzer kann nach wie vor zwischen
+ * Ersten Wort -> Zweites Wort oder umgekehrt
+ * sowie Groß - und Kleinschreibung auswählen.
+ * Auch die Wörter sind veränderbar
+ */
+
 public class AendernLernkartei extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();

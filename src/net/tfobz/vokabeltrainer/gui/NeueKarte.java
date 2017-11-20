@@ -13,6 +13,14 @@ import javax.swing.JTextField;
 
 import net.tfobz.vokabeltrainer.model.*;
 
+/**
+ * Klasse, welche eine neue Karte für
+ * ein Fach anlegt. Die Wörter werden so
+ * übersetzt, wie in der Lernkartei angegeben
+ * wurde. Hinzufügen von neuer Sprache
+ * nur über das Fach
+ */
+
 public class NeueKarte extends JDialog
 {
 	private int lnummer = 0;

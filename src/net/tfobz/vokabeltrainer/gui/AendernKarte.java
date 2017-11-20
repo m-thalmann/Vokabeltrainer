@@ -15,6 +15,13 @@ import javax.swing.JTextField;
 
 import net.tfobz.vokabeltrainer.model.*;
 
+/**
+ * Klasse, welche eine Karte abändert. Dabei
+ * können nur die Wörter geändert werden oder 
+ * die gesamte Karte gelöscht werden. Der 
+ * Benutzer kann nicht die Übersetzungsrichtung
+ * oder Groß - und Kleinschreibung ändern
+ */
 
 public class AendernKarte extends JDialog
 {

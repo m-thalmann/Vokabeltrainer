@@ -18,6 +18,14 @@ import javax.swing.Timer;
 
 import net.tfobz.vokabeltrainer.model.*;
 
+/**
+ * Klasse, welche die Lernfunktion beinhaltet. 
+ * Der Benutzer lernt indem er seine Vermutung
+ * hineinschreibt. Anschließend kann er überprüfen
+ * ob er richtig lag oder falsch. Zudem kann er
+ * auch Karten überspringen
+ */
+
 public class LernenGUI extends JDialog {
 	private static final int WRONG = -1;
 	private static final int NOTDONE = 0;

@@ -10,6 +10,12 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+/**
+ * Klasse, welche dem Benutzer die Möglichkeit
+ * bietet, eine neue Lernkartei oder ein neues
+ * Fach zum Lernen zu erstellen
+ */
+
 public class NeuMenue extends JDialog {
 	
 	private int saved_num = -1;
