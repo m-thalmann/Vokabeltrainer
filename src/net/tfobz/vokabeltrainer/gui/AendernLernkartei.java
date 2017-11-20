@@ -152,6 +152,7 @@ public class AendernLernkartei extends JDialog {
 			}
 			
 			{
+				//Aktiviert/Deaktiviert Groﬂ- und Kleinschreibung
 				grossKleinBox = new JCheckBox("Gro\u00DF/Kleinschreibung");
 				grossKleinBox.setBounds(259, 238, 165, 23);
 				grossKleinBox.setSelected(VokabeltrainerDB.getLernkartei(num).getGrossKleinschreibung());

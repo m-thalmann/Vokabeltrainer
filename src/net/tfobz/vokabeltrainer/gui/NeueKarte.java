@@ -38,7 +38,8 @@ public class NeueKarte extends JDialog
 		titel.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		titel.setBounds(10, 11, 200, 25);
 		this.getContentPane().add(titel);
-
+		
+		//Setzt die Wörter, welche geändert werden können
 		erstes = new JLabel(VokabeltrainerDB.getLernkartei(lnummer)
 				.getWortEinsBeschreibung() + ": ");
 		erstes.setBounds(10, 44, 100, 20);

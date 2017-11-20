@@ -30,6 +30,7 @@ public class NeuMenue extends JDialog {
 		this.ownerFrame = owner;
 		this.lnummer = numLernkartei;
 		
+		//Erstellt eine neue Lernkartei
 		JButton n1 = new JButton("Lernkartei");
 		n1.setBounds(22, 49, 183, 25);
 		n1.setFocusPainted(false);
@@ -45,6 +46,7 @@ public class NeuMenue extends JDialog {
 		});
 		getContentPane().add(n1);
 		
+		//Erstellt ein neues Fach
 		JButton n2 = new JButton("Fach");
 		n2.setBounds(22, 87, 183, 25);
 		n2.setFocusPainted(false);
@@ -69,10 +71,18 @@ public class NeuMenue extends JDialog {
 		setVisible(true);
 	}
 	
+	/**
+	 * Gibt an, ob eine Option gewählt wurde
+	 * @return true, wenn ein Fach oder eine Lernkartei angelegt wurde
+	 */
 	public boolean isSaved(){
 		return this.saved_num != -1;
 	}
 	
+	/**
+	 * Gibt die Nummer zurück, welche Option gewählt wurde
+	 * @return 0 für eine Lernkartei, 1 für ein Fach
+	 */
 	public int getSaved(){
 		return this.saved_num;
 	}

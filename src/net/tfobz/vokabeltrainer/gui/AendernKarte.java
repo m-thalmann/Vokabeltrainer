@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 
 import net.tfobz.vokabeltrainer.model.*;
 
+
 public class AendernKarte extends JDialog
 {
 	
@@ -62,7 +63,7 @@ public class AendernKarte extends JDialog
 		firstText.addKeyListener(new KeyAdapter()
 		{
 
-			@Override
+			//Ermöglicht springen zum zweiten Textfeld mit Enter
 			public void keyPressed(KeyEvent e) {
 				if(e.getKeyCode() == KeyEvent.VK_ENTER){
 					ok.doClick();
@@ -96,7 +97,7 @@ public class AendernKarte extends JDialog
 		loeschen.addActionListener(new ActionListener()
 		{
 
-			@Override
+			//Löschvorgang mit Speicherung und Warnung
 			public void actionPerformed(ActionEvent e) {
 				if (JOptionPane.showConfirmDialog(ownerFrame, "Wollen Sie wirklich diese Karte löschen?", "Warnung", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 					VokabeltrainerDB.loeschenKarte(num);
@@ -163,7 +164,8 @@ public class AendernKarte extends JDialog
 		
 		setVisible(true);
 	}
-
+	
+	//Gibt den "Gespeichert"- Status der jeweiligen Operation zurück
 	public boolean isSaved() {
 		return this.saved;
 	}
