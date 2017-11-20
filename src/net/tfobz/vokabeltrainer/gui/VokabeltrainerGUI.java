@@ -195,7 +195,6 @@ public class VokabeltrainerGUI extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				importData();
 			}
 		});
 		contentPane.add(optionen);
@@ -236,21 +235,6 @@ public class VokabeltrainerGUI extends JFrame {
 			}
 		});
 		contentPane.add(loeschen);
-
-		JButton aendern = new JButton("\u00C4ndern");
-		aendern.setBounds(10, 378, 89, 23);
-		aendern.setFocusPainted(false);
-		aendern.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				AendernLernkartei aenderFenster = new AendernLernkartei(VokabeltrainerGUI.this, l.getNummer());
-				if(aenderFenster.isSaved()){
-					updateView();
-				}
-				aenderFenster.dispose();
-			}
-		});
-		contentPane.add(aendern);
 
 		JButton vor = new JButton(">");
 		vor.setBounds(533, 378, 41, 23);
@@ -337,48 +321,6 @@ public class VokabeltrainerGUI extends JFrame {
 		if(this.num != num){
 			this.num = num;
 			updateView();
-		}
-	}
-
-	private void importData() {
-		JFileChooser importFileChooser = new JFileChooser();
-
-		importFileChooser.setMultiSelectionEnabled(false);
-		importFileChooser.setFileFilter(new FileNameExtensionFilter("Textdateien", "txt"));
-		importFileChooser.setAcceptAllFileFilterUsed(false);
-		
-		if(importFileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
-			String path = importFileChooser.getSelectedFile().getAbsolutePath();
-			
-			if(path.endsWith(".txt")){
-				File file = new File(path);
-				
-				if(!file.isDirectory() && file.isFile()){
-					switch(VokabeltrainerDB.importierenKarten(l.getNummer(), path)){
-						case -1:{
-							JOptionPane.showMessageDialog(this, "Importfehler ist aufgetreten!", "Fehler", JOptionPane.ERROR_MESSAGE);
-							break;
-						}
-						case -2:{
-							JOptionPane.showMessageDialog(this, "Importfehler ist aufgetreten! Die Datei existiert nicht", "Fehler", JOptionPane.ERROR_MESSAGE);
-							break;
-						}
-						case -3:{
-							JOptionPane.showMessageDialog(this, "Importfehler ist aufgetreten! Die Lernkartei mit der Nummer " + String.valueOf(num + 1) + " existiert nicht", "Fehler", JOptionPane.ERROR_MESSAGE);
-							break;
-						}
-						default:{
-							JOptionPane.showMessageDialog(this, "Daten wurden erfolgreich importiert!", "Ok", JOptionPane.INFORMATION_MESSAGE);
-							updateView();
-						}
-					}
-				}
-				else{
-					JOptionPane.showMessageDialog(this, "Die Datei \"" + path + "\" existiert nicht.", "Achtung", JOptionPane.WARNING_MESSAGE);
-				}
-			}else{
-				JOptionPane.showMessageDialog(this, "Die Datei \"" + path + "\" ist keine Textdatei (*.txt)", "Achtung", JOptionPane.WARNING_MESSAGE);
-			}
 		}
 	}
 
