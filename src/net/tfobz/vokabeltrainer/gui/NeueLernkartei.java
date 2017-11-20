@@ -46,7 +46,6 @@ public class NeueLernkartei extends JDialog {
 	
 	public NeueLernkartei(JFrame owner) {
 		super(owner, "Vokabeltrainer: Lernkartei hinzufügen");
-		System.out.println("k");
 		setBounds(100, 100, 439, 400);
 		setModal(true);
 		setLocationRelativeTo(owner);
