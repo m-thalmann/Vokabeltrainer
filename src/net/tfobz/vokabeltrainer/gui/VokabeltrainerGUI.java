@@ -28,6 +28,8 @@ import javax.swing.table.DefaultTableModel;
 
 import net.tfobz.vokabeltrainer.model.*;
 
+//TODO Du Fotze do hon i wos geändert
+
 public class VokabeltrainerGUI extends JFrame {
 
 	private JPanel contentPane = null;
@@ -62,7 +64,7 @@ public class VokabeltrainerGUI extends JFrame {
 	public VokabeltrainerGUI() {
 		super("Vokabeltrainer");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 600, 450);
+		setBounds(100, 100, 600, 435);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -88,7 +90,7 @@ public class VokabeltrainerGUI extends JFrame {
 		vokabeltitel = new JLabel("Vokabeltrainer");
 		vokabeltitel.setHorizontalAlignment(SwingConstants.CENTER);
 		vokabeltitel.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		vokabeltitel.setBounds(10, 11, 555, 30);
+		vokabeltitel.setBounds(20, 11, 545, 30);
 		contentPane.add(vokabeltitel);
 
 		chckbxNurFlligeFcher = new JCheckBox("Nur f\u00E4llige F\u00E4cher");
@@ -186,20 +188,20 @@ public class VokabeltrainerGUI extends JFrame {
 		lernkartei.setBounds(10, 44, 65, 23);
 		contentPane.add(lernkartei);
 
-		JButton importieren = new JButton("Importieren");
-		importieren.setBounds(10, 378, 100, 23);
-		importieren.setFocusPainted(false);
-		importieren.addActionListener(new ActionListener() {
+		JButton optionen = new JButton("Optionen");
+		optionen.setBounds(103, 378, 100, 23);
+		optionen.setFocusPainted(false);
+		optionen.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				importData();
 			}
 		});
-		contentPane.add(importieren);
+		contentPane.add(optionen);
 
 		JButton loeschen = new JButton("L\u00F6schen");
-		loeschen.setBounds(120, 378, 89, 23);
+		loeschen.setBounds(103, 44, 89, 23);
 		loeschen.setFocusPainted(false);
 		loeschen.addActionListener(new ActionListener() {
 
@@ -236,7 +238,7 @@ public class VokabeltrainerGUI extends JFrame {
 		contentPane.add(loeschen);
 
 		JButton aendern = new JButton("\u00C4ndern");
-		aendern.setBounds(219, 378, 89, 23);
+		aendern.setBounds(10, 378, 89, 23);
 		aendern.setFocusPainted(false);
 		aendern.addActionListener(new ActionListener() {
 
@@ -314,13 +316,13 @@ public class VokabeltrainerGUI extends JFrame {
 		contentPane.add(pos);
 		
 		JButton btnWrterAnzeigen = new JButton("Karten anzeigen");
-		btnWrterAnzeigen.setBounds(10, 11, 127, 25);
+		btnWrterAnzeigen.setBounds(210, 378, 127, 23);
 		btnWrterAnzeigen.setFocusPainted(false);
 		btnWrterAnzeigen.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ViewKarten vk = new ViewKarten(VokabeltrainerGUI.this, l.getNummer());
+				ViewKarten vk = new ViewKarten(VokabeltrainerGUI.this, VokabeltrainerDB.getLernkarteien().get(num).getNummer());
 				vk.dispose();
 			}
 		});
