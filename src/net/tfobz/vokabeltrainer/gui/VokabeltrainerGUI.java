@@ -7,10 +7,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -21,37 +23,23 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
-import net.tfobz.vokabeltrainer.model.Fach;
-import net.tfobz.vokabeltrainer.model.Lernkartei;
-import net.tfobz.vokabeltrainer.model.VokabeltrainerDB;
+import net.tfobz.vokabeltrainer.model.*;
 
-/**
- *
- * @author Matthias Thalmann & Lukas Niederstätter
- * @version 1.0
- *
- * Dieses Programm implementiert einen Vokabeltrainer nach folgendem Prinzip:
- * @see <a href="https://de.wikipedia.org/wiki/Lernkartei">https://de.wikipedia.org/wiki/Lernkartei</a>
- *
- */
+//TODO Du Fotze do hon i wos geändert
 
 public class VokabeltrainerGUI extends JFrame {
 
 	private JPanel contentPane = null;
 	private JTable faecherListe= null;
 	private JCheckBox chckbxNurFlligeFcher = null;
-	private JButton btnAnzeigen = null;
+	private int num = 0;
 	private JLabel pos = null;
 	private JLabel vokabeltitel = null;
-	private JScrollPane scrollPane= null;
-	
 	private String[] columnNames = {"Beschreibung", "Zuletzt gelernt", "Erinnerung (Tage)", "Fällig"};
-
-	private int num = 0;
+	private JScrollPane scrollPane= null;
 	private Lernkartei l = null;
 
 	public static void main(String[] args) {
@@ -76,7 +64,7 @@ public class VokabeltrainerGUI extends JFrame {
 	public VokabeltrainerGUI() {
 		super("Vokabeltrainer");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 600, 443);
+		setBounds(100, 100, 600, 435);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -84,7 +72,6 @@ public class VokabeltrainerGUI extends JFrame {
 		setLocationRelativeTo(null);
 		setResizable(false);
 		
-		//Überprüfen ob eine Lernkartei vorhanden ist
 		if(VokabeltrainerDB.getLernkarteien().size() == 0){
 			JOptionPane.showMessageDialog(this, "Sie besitzen noch keine Lernkartei. Sie müssen eine Anlegen um fortfahren zu können.", "Willkommen", JOptionPane.INFORMATION_MESSAGE);
 			
@@ -112,7 +99,6 @@ public class VokabeltrainerGUI extends JFrame {
 		chckbxNurFlligeFcher.setBounds(324, 43, 153, 25);
 		contentPane.add(chckbxNurFlligeFcher);
 		
-		//Training starten
 		JButton start = new JButton("Start");
 		start.setBounds(485, 44, 89, 23);
 		start.setFocusPainted(false);
@@ -202,38 +188,54 @@ public class VokabeltrainerGUI extends JFrame {
 		lernkartei.setBounds(10, 44, 65, 23);
 		contentPane.add(lernkartei);
 
-		//Optionen -> Lernkartei ändern, Lernkartei löschen, Importieren, Exportieren
 		JButton optionen = new JButton("Optionen");
-		optionen.setBounds(10, 378, 100, 23);
+		optionen.setBounds(103, 378, 100, 23);
 		optionen.setFocusPainted(false);
 		optionen.addActionListener(new ActionListener() {
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				OptionMenue om = new OptionMenue(VokabeltrainerGUI.this, l.getNummer());
-				if(om.isSaved()){
-					switch(om.getSavedNum()){
-						case OptionMenue.CHANGE:{
-							updateView();
-							break;
-						}
-						case OptionMenue.DELETE:{
-							setNum(0);
-							break;
-						}
-						case OptionMenue.IMPORT:{
-							updateView();
-							break;
-						}
-						case OptionMenue.EXPORT:{
-							break;
-						}
-					}
-				}
 			}
 		});
 		contentPane.add(optionen);
 
-		//Navigation vor
+		JButton loeschen = new JButton("L\u00F6schen");
+		loeschen.setBounds(103, 44, 89, 23);
+		loeschen.setFocusPainted(false);
+		loeschen.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int loeschenAnswer = JOptionPane.showConfirmDialog(VokabeltrainerGUI.this,
+						"Sie sind dabei diese Lernkartei samt ihren Fächern und Karten zu löschen. Wollen Sie diese Lernkartei wirklich löschen?",
+						"Achtung", JOptionPane.YES_NO_OPTION);
+				if (loeschenAnswer == JOptionPane.YES_OPTION) {
+					int anzL = VokabeltrainerDB.getLernkarteien().size();
+			
+					if(VokabeltrainerDB.loeschenLernkartei(l.getNummer()) == 0){
+						JOptionPane.showMessageDialog(VokabeltrainerGUI.this, "Die Lernkartei wurde erfolgreich gelöscht");
+						if(anzL == 1){
+							if(JOptionPane.showConfirmDialog(VokabeltrainerGUI.this, "Keine Lernkarteien mehr vorhanden! Wollen Sie eine Neue erstellen?", "Warnung", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+								NeueLernkartei nl = new NeueLernkartei(VokabeltrainerGUI.this);
+								nl.setVisible(true);
+								if(nl.isSaved()){
+									setNum(0);
+								} else {
+									System.exit(0);
+								}
+								
+								nl.dispose();
+							}else{
+								System.exit(0);
+							}
+						}
+						setNum(0);
+					}
+				}
+			}
+		});
+		contentPane.add(loeschen);
+
 		JButton vor = new JButton(">");
 		vor.setBounds(533, 378, 41, 23);
 		vor.setFocusPainted(false);
@@ -251,7 +253,6 @@ public class VokabeltrainerGUI extends JFrame {
 		});
 		contentPane.add(vor);
 
-		//Navigation zurück
 		JButton zurueck = new JButton("<");
 		zurueck.setBounds(485, 378, 41, 23);
 		zurueck.setFocusPainted(false);
@@ -273,7 +274,6 @@ public class VokabeltrainerGUI extends JFrame {
 		scrollPane.setBounds(10, 74, 564, 293);
 		contentPane.add(scrollPane);
 
-		//Neue Lernkartei anlegen
 		JButton neu = new JButton("Neu");
 		neu.setBounds(407, 378, 65, 23);
 		neu.setFocusPainted(false);
@@ -299,9 +299,8 @@ public class VokabeltrainerGUI extends JFrame {
 		pos.setBounds(79, 48, 57, 14);
 		contentPane.add(pos);
 		
-		//Karten anzeigen
 		JButton btnWrterAnzeigen = new JButton("Karten anzeigen");
-		btnWrterAnzeigen.setBounds(117, 378, 127, 23);
+		btnWrterAnzeigen.setBounds(210, 378, 127, 23);
 		btnWrterAnzeigen.setFocusPainted(false);
 		btnWrterAnzeigen.addActionListener(new ActionListener()
 		{
@@ -313,26 +312,8 @@ public class VokabeltrainerGUI extends JFrame {
 		});
 		contentPane.add(btnWrterAnzeigen);
 		
-		//Fach anzeigen
-		btnAnzeigen = new JButton("Anzeigen");
-		btnAnzeigen.setBounds(256, 377, 97, 25);
-		btnAnzeigen.setFocusPainted(false);
-		btnAnzeigen.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ViewFach v = new ViewFach(VokabeltrainerGUI.this, l.getNummer(), faecherListe.getSelectedRow());
-      	if(v.isSaved()){
-      		updateView();
-      	}
-      	v.dispose();
-			}
-		});
-		contentPane.add(btnAnzeigen);
-		
 		setVisible(true);
 		
-		//Initialisierung der Tabelle und Labels
 		updateView();
 	}
 	
@@ -343,10 +324,6 @@ public class VokabeltrainerGUI extends JFrame {
 		}
 	}
 
-	/**
-	 * Diese Methode holt sich die Informationen aus der Datenbank
-	 * und füllt die Tabelle und die Labels dementsprechend
-	 */
 	private void updateView() {
 		l = VokabeltrainerDB.getLernkarteien().get(num);
 		this.vokabeltitel.setText(l.getBeschreibung());
@@ -398,21 +375,5 @@ public class VokabeltrainerGUI extends JFrame {
 	    }
 		});
 		scrollPane.setViewportView(faecherListe);
-		
-		if(faecherListe.getSelectedRow() == -1){
-			btnAnzeigen.setEnabled(false);
-		}else{
-			btnAnzeigen.setEnabled(true);
-		}
-		
-		faecherListe.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
-      public void valueChanged(ListSelectionEvent event) {
-      	if(faecherListe.getSelectedRow() == -1){
-      		btnAnzeigen.setEnabled(false);
-    		}else{
-    			btnAnzeigen.setEnabled(true);
-    		}
-      }
-		});
 	}
 }

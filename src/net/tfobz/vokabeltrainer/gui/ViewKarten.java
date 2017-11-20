@@ -20,22 +20,15 @@ import javax.swing.table.DefaultTableModel;
 
 import net.tfobz.vokabeltrainer.model.*;
 
-/**
- * Diese Klasse zeigt die Karten aller Fächer in einer
- * spezifischen Lernkartei
- *
- */
-
 public class ViewKarten extends JDialog
 {
 	private JScrollPane scrollPane = null;
 	private JTable table = null;
 	private JButton btnKarteBearbeiten = null;
-	private JFrame ownerFrame = null;
 	
 	private String[] columnNames = {"Fach", "Wort 1", "Wort 2"};
-	
 	private int lnummer = 0;
+	private JFrame ownerFrame = null;
 	private int[] kartenNummern = null;
 	
 	public ViewKarten(JFrame owner, int nummerLernkartei) {
@@ -59,7 +52,6 @@ public class ViewKarten extends JDialog
 		scrollPane.setBounds(0, 49, 494, 326);
 		this.getContentPane().add(scrollPane);
 		
-		//Fenster schließen
 		JButton btnSchlieen = new JButton("Schlie\u00DFen");
 		btnSchlieen.setBounds(385, 388, 97, 25);
 		btnSchlieen.setFocusPainted(false);
@@ -72,7 +64,6 @@ public class ViewKarten extends JDialog
 		});
 		getContentPane().add(btnSchlieen);
 		
-		//Neue Karte
 		JButton btnNeueKarte = new JButton("Neue Karte");
 		btnNeueKarte.setBounds(10, 388, 97, 25);
 		btnNeueKarte.setFocusPainted(false);
@@ -89,7 +80,6 @@ public class ViewKarten extends JDialog
 		});
 		getContentPane().add(btnNeueKarte);
 		
-		//Karte bearbeiten
 		btnKarteBearbeiten = new JButton("Karte bearbeiten");
 		btnKarteBearbeiten.setBounds(119, 388, 136, 25);
 		btnKarteBearbeiten.setFocusPainted(false);
@@ -108,7 +98,6 @@ public class ViewKarten extends JDialog
 		});
 		getContentPane().add(btnKarteBearbeiten);
 		
-		//Spaltenüberschriften setzen
 		columnNames[1] = VokabeltrainerDB.getLernkartei(lnummer).getWortEinsBeschreibung();
 		columnNames[2] = VokabeltrainerDB.getLernkartei(lnummer).getWortZweiBeschreibung();
 		
@@ -117,10 +106,6 @@ public class ViewKarten extends JDialog
 		setVisible(true);
 	}
 	
-	/**
-	 * Diese Methode holt sich die Informationen aus der Datenbank
-	 * und füllt die Tabelle und die Labels dementsprechend
-	 */
 	private void updateView(){
 		List<Fach> fachList = VokabeltrainerDB.getFaecher(lnummer);
 		

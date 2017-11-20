@@ -18,18 +18,9 @@ import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import net.tfobz.vokabeltrainer.model.*;
-
-/**
- *
- * Diese Klasse zeigt alle Karten in einem
- * gewissen Fach,in einer gewissen Lernkartei
- *
- */
 
 public class ViewFach extends JDialog
 {
@@ -38,14 +29,11 @@ public class ViewFach extends JDialog
 	private JTextField textField;
 	private JSpinner spinner;
 	private JFrame ownerFrame = null;
-	private JButton btnKarteBearbeiten = null;
 	
 	private String[] columnNames = {"Wort 1", "Wort 2"};
-	
 	private int lnummer;
 	private int fnummer;
 	private boolean saved = false;
-	private int[] kartenNummern = null;
 	
 	private Fach f;
 	private List<Karte> karten;
@@ -90,9 +78,24 @@ public class ViewFach extends JDialog
 		spinner.setValue(f.getErinnerungsIntervall());
 		getContentPane().add(spinner);
 		
-		//Speichern
 		JButton btnNewButton = new JButton("Speichern");
 		btnNewButton.setBounds(393, 428, 89, 24);
+		getContentPane().add(btnNewButton);
+		btnNewButton.setFocusPainted(false);
+		btnNewButton.setVerticalAlignment(SwingConstants.TOP);
+		
+		JButton btnNewButton_1 = new JButton("Abbrechen");
+		btnNewButton_1.setBounds(288, 428, 93, 24);
+		getContentPane().add(btnNewButton_1);
+		btnNewButton_1.setFocusPainted(false);
+		btnNewButton_1.setVerticalAlignment(SwingConstants.TOP);
+		btnNewButton_1.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+			}
+		});
 		btnNewButton.addActionListener(new ActionListener()
 		{
 			@Override
@@ -120,57 +123,17 @@ public class ViewFach extends JDialog
 				}
 			}
 		});
-		getContentPane().add(btnNewButton);
-		btnNewButton.setFocusPainted(false);
-		btnNewButton.setVerticalAlignment(SwingConstants.TOP);
-		
-		//Abbrechen
-		JButton btnNewButton_1 = new JButton("Abbrechen");
-		btnNewButton_1.setBounds(288, 428, 93, 24);
-		btnNewButton_1.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
-			}
-		});
-		getContentPane().add(btnNewButton_1);
-		btnNewButton_1.setFocusPainted(false);
-		btnNewButton_1.setVerticalAlignment(SwingConstants.TOP);
-		
-		//Karte bearbeiten
-		btnKarteBearbeiten = new JButton("Karte bearbeiten");
-		btnKarteBearbeiten.setBounds(10, 428, 136, 25);
-		btnKarteBearbeiten.setFocusPainted(false);
-		btnKarteBearbeiten.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(tableKarten.getSelectedRow() != -1){
-					AendernKarte ak = new AendernKarte(ownerFrame, lnummer, kartenNummern[tableKarten.getSelectedRow()]);
-					if(ak.isSaved()){ 
-						updateView();
-					}
-					ak.dispose();
-				}
-			}
-		});
-		getContentPane().add(btnKarteBearbeiten);
 		
 		updateView();
 		
 		setVisible(true);
 	}
 	
-	/**
-	 * Diese Methode holt sich die Informationen aus der Datenbank
-	 * und füllt die Tabelle und die Labels dementsprechend
-	 */
 	private void updateView() {
 		karten = VokabeltrainerDB.getKarten(f.getNummer());
 
 		String[][] karten_desc = new String[karten.size()][2];
-		kartenNummern = new int[karten.size()];
+		final int[] kartenNummern = new int[karten.size()];
 
 		for (int i = 0; i < karten.size(); i++) {
 			karten_desc[i][0] = karten.get(i).getWortEins();
@@ -211,22 +174,6 @@ public class ViewFach extends JDialog
 		});
 		
 		scrollKarten.setViewportView(tableKarten);
-		
-		if(tableKarten.getSelectedRow() == -1){
-			btnKarteBearbeiten.setEnabled(false);
-		}else{
-			btnKarteBearbeiten.setEnabled(true);
-		}
-		
-		tableKarten.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
-      public void valueChanged(ListSelectionEvent event) {
-      	if(tableKarten.getSelectedRow() == -1){
-    			btnKarteBearbeiten.setEnabled(false);
-    		}else{
-    			btnKarteBearbeiten.setEnabled(true);
-    		}
-      }
-		});
 	}
 	
 	public boolean isSaved(){
