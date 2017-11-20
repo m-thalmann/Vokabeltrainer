@@ -99,6 +99,10 @@ public class VokabeltrainerDB
 		System.out.println(k);
 	}
 	
+	static{
+		erstellenTabellen();
+	}
+	
 	/**
 	 * ACHTUNG: In die Einstellungen-Tabelle wird ein Datensatz hineingeschrieben
 	 */
